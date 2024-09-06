@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Register | Limupa</title>
+        <title>User Register | Limupa</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Favicon -->
@@ -428,7 +428,7 @@
                     <div class="breadcrumb-content">
                         <ul>
                             <li><a href="index.html">Home</a></li>
-                            <li class="active">Register</li>
+                            <li class="active">User Register</li>
                         </ul>
                     </div>
                 </div>
@@ -442,15 +442,15 @@
                         <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
                             <form>
                                 <div class="login-form">
-                                    <h4 class="login-title">Register</h4>
+                                    <h4 class="login-title">User Register</h4>
                                     <div class="row">
                                         <div class="col-md-6 col-12 mb-20">
                                             <label>First Name*</label>
-                                            <input class="mb-0" type="text" id="f_name" placeholder="First Name">
+                                            <input class="mb-0" type="text" id="f_name" placeholder="First Name" onkeypress="return hasDigit(event);">
                                         </div>
                                         <div class="col-md-6 col-12 mb-20">
                                             <label>Last Name*</label>
-                                            <input class="mb-0" type="text" id="l_name" placeholder="Last Name">
+                                            <input class="mb-0" type="text" id="l_name" placeholder="Last Name" onkeypress="return hasDigit(event);">
                                         </div>
                                         <div class="col-md-12 mb-20">
                                             <label>Email Address*</label>
@@ -751,10 +751,10 @@
         <script src="js/lib/scrollUp.min.js"></script>
         <!-- Main/Activator js -->
         <script src="js/lib/main.js"></script>
-        
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
-        <script src="js/Register.js"></script>
+
+        <script src="js/RegisterUser.js"></script>
     </body>
 
     <!-- login-register31:27-->
