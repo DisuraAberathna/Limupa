@@ -1,3 +1,10 @@
+const hasDigit = (event) => {
+    if (event.key >= '0' && event.key <= '9') {
+        return false;
+    }
+    return true;
+};
+
 const handlePress = async() => {
     const reqObject = {
         f_name: document.getElementById("f_name").value,
