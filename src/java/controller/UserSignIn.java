@@ -5,17 +5,17 @@
 package controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import dto.ResponseDTO;
 import dto.UserDTO;
 import entity.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import model.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -32,40 +32,58 @@ public class UserSignIn extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ResponseDTO responseDTO = new ResponseDTO();
 
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        UserDTO userDTO = gson.fromJson(req.getReader(), UserDTO.class);
+        Gson gson = new Gson();
+        JsonObject reqObject = gson.fromJson(req.getReader(), JsonObject.class);
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        String email = reqObject.get("email").getAsString();
+        String password = reqObject.get("password").getAsString();
+        boolean remember_me = reqObject.get("remember_me").getAsBoolean();
 
-        Criteria criteria = session.createCriteria(User.class);
-        criteria.add(Restrictions.eq("email", userDTO.getEmail()));
-        criteria.add(Restrictions.eq("password", userDTO.getPassword()));
-
-        if (!criteria.list().isEmpty()) {
-            User user = (User) criteria.list().get(0);
-
-            if (!user.getVerification().equals("Verified")) {
-                req.getSession().setAttribute("email", userDTO.getEmail());
-                responseDTO.setMsg("Not Verified");
-            } else {
-                userDTO.setId(user.getId());
-                userDTO.setF_name(user.getF_name());
-                userDTO.setL_name(user.getL_name());
-                userDTO.setEmail(user.getEmail());
-                userDTO.setPassword(null);
-                HttpSession httpSession = req.getSession(true);
-                httpSession.setAttribute("user", userDTO);
-
-                resp.setHeader("Set-Cookie", "JSESSIONID=" + httpSession.getId() + "; Domain=localhost:3000; Path=/signin; HttpOnly; SameSite=None; Secure");
-
-                responseDTO.setOk(true);
-                responseDTO.setMsg("Successfully sign in");
-//                responseDTO.setMsg(gson.toJson(userDTO));
-            }
+        if (email.isEmpty()) {
+            responseDTO.setMsg("Please enter your email!");
+        } else if (password.isEmpty()) {
+            responseDTO.setMsg("Please enter your password!");
         } else {
-            responseDTO.setMsg("Invalid credentials");
+            Session session = HibernateUtil.getSessionFactory().openSession();
+
+            Criteria criteria = session.createCriteria(User.class);
+            criteria.add(Restrictions.eq("email", email));
+            criteria.add(Restrictions.eq("password", password));
+
+            if (!criteria.list().isEmpty()) {
+                User user = (User) criteria.list().get(0);
+
+                if (!user.getVerification().equals("Verified")) {
+                    req.getSession().setAttribute("email", email);
+                    responseDTO.setMsg("Not Verified");
+                } else {
+                    UserDTO userDTO = new UserDTO();
+                    userDTO.setId(user.getId());
+                    userDTO.setF_name(user.getF_name());
+                    userDTO.setL_name(user.getL_name());
+                    userDTO.setEmail(user.getEmail());
+                    userDTO.setPassword(null);
+
+                    req.getSession(true).setAttribute("user", userDTO);
+
+                    if (remember_me) {
+                        Cookie emailCookie = new Cookie("email", email);
+                        Cookie passwordCookie = new Cookie("password", password);
+
+                        emailCookie.setMaxAge(60 * 60 * 24 * 365);
+                        passwordCookie.setMaxAge(60 * 60 * 24 * 365);
+
+                        resp.addCookie(emailCookie);
+                        resp.addCookie(passwordCookie);
+                    }
+
+                    responseDTO.setOk(true);
+                }
+            } else {
+                responseDTO.setMsg("Invalid credentials");
+            }
+            session.close();
         }
-        session.close();
 
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(responseDTO));
