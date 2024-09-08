@@ -62,7 +62,7 @@ public class UserSignIn extends HttpServlet {
                         userDTO.setId(user.getId());
                         userDTO.setF_name(user.getF_name());
                         userDTO.setL_name(user.getL_name());
-                        userDTO.setEmail(user.getEmail());
+                        userDTO.setEmail(email);
                         userDTO.setPassword(null);
 
                         req.getSession(true).setAttribute("user", userDTO);
