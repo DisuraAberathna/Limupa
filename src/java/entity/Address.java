@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @author SINGER
  */
 @Entity
-@Table(name = "model")
+@Table(name = "address")
 public class Address implements Serializable {
 
     @Id
