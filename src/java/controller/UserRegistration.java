@@ -173,7 +173,7 @@ public class UserRegistration extends HttpServlet {
                                 + "    </div>\n"
                                 + "  </div>\n"
                                 + "</body>";
-                        Mail.sendMail(email, "Verify Your Account - Auto Rent Hub", content);
+                        Mail.sendMail(email, "Verify Your Account - Limupa", content);
                     }
                 };
                 mailSender.start();
