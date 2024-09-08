@@ -184,7 +184,7 @@ public class UserRegistration extends HttpServlet {
                 req.getSession().setAttribute("email", email);
                 responseDTO.setOk(true);
             } else {
-                responseDTO.setMsg("Email address already exists");
+                responseDTO.setMsg("Email address already exists!");
             }
 
             session.close();
