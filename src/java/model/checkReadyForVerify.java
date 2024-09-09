@@ -31,8 +31,8 @@ public class checkReadyForVerify implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        
-        if (req.getSession().getAttribute("email") != null) {
+
+        if (req.getSession().getAttribute("email") != null || req.getSession().getAttribute("id") != null) {
             chain.doFilter(request, response);
         } else {
             resp.sendRedirect("userSignin.html");

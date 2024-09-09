@@ -5,6 +5,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -59,7 +60,7 @@ public class Product implements Serializable {
     private Color color;
 
     @Column(name = "date_time", nullable = false)
-    private String date_time;
+    private Date date_time;
 
     @Column(name = "status", nullable = false)
     private int status;
@@ -147,11 +148,11 @@ public class Product implements Serializable {
         this.color = color;
     }
 
-    public String getDate_time() {
+    public Date getDate_time() {
         return date_time;
     }
 
-    public void setDate_time(String date_time) {
+    public void setDate_time(Date date_time) {
         this.date_time = date_time;
     }
 
