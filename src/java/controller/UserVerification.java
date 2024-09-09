@@ -65,7 +65,7 @@ public class UserVerification extends HttpServlet {
                     req.getSession().setAttribute("user", userDTO);
 
                     responseDTO.setOk(true);
-                    responseDTO.setMsg("Your password updated!");
+                    responseDTO.setMsg("Your email updated!");
                 } else {
                     responseDTO.setMsg("Something went wrong!");
                 }
