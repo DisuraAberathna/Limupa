@@ -12,9 +12,11 @@ import entity.User;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.HibernateUtil;
 import model.Mail;
 import model.Validate;
@@ -172,14 +174,17 @@ public class UserAccountUpdate extends HttpServlet {
                         };
                         mailSender.start();
 
-                        user.setEmail(email);
-                        user.setVerification(String.valueOf(otp));
-                        session.update(user);
-                        session.beginTransaction().commit();
+                        HttpSession httpSession = req.getSession();
+                        httpSession.removeAttribute("user");
+                        httpSession.setAttribute("id", user.getId());
+                        httpSession.setAttribute("email", email);
+                        httpSession.setAttribute("otp", otp);
 
-                        req.getSession().removeAttribute("user");
-                        req.getSession().setAttribute("email", email);
-//
+                        Cookie cookie = new Cookie("JSESSIONID", httpSession.getId());
+                        cookie.setMaxAge(60 * 2);
+
+                        resp.addCookie(cookie);
+
                         responseDTO.setOk(true);
                         responseDTO.setMsg("Verify your email");
                     } else {
