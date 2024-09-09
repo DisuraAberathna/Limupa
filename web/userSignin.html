@@ -438,17 +438,17 @@
                         <img src="images/sign-in.svg" class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30"/>  
                         <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
                             <!-- Login Form s-->
-                            <form action="#" >
+                            <form>
                                 <div class="login-form">
                                     <h4 class="login-title">User Sign In</h4>
                                     <div class="row">
                                         <div class="col-md-12 col-12 mb-20">
                                             <label>Email Address*</label>
-                                            <input class="mb-0" type="email" placeholder="Email Address">
+                                            <input class="mb-0" type="email" id="email" placeholder="Email Address">
                                         </div>
                                         <div class="col-12 mb-20">
                                             <label>Password</label>
-                                            <input class="mb-0" type="password" placeholder="Password">
+                                            <input class="mb-0" type="password" id="password" placeholder="Password">
                                         </div>
                                         <div class="col-md-8">
                                             <div class="check-box d-inline-block ml-0 ml-md-2 mt-10">
@@ -460,7 +460,7 @@
                                             <a href="#"> Forgot password?</a>
                                         </div>
                                         <div class="col-md-12">
-                                            <button class="register-button mt-0 px-5">Sign In</button>
+                                            <button type="button" onclick="handlePress();" class="register-button mt-0 px-5">Sign In</button>
                                         </div>
                                         <div class="col-12 mt-10 mb-20">
                                             <div>Don't have an account?
@@ -746,6 +746,10 @@
         <script src="js/lib/scrollUp.min.js"></script>
         <!-- Main/Activator js -->
         <script src="js/lib/main.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script src="js/SigninUser.js"></script>
     </body>
 
     <!-- login-register31:27-->

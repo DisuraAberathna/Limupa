@@ -1,15 +1,13 @@
 const handlePress = async() => {
     const reqObject = {
-        f_name: document.getElementById("f_name").value,
-        l_name: document.getElementById("l_name").value,
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
-        confirm_password: document.getElementById("confirm_password").value
+        remember_me: document.getElementById("remember_me").checked
     };
 
     try {
         const response = await fetch(
-                "UserRegistration",
+                "UserSignIn",
                 {
                     method: "POST",
                     headers: {
@@ -18,25 +16,36 @@ const handlePress = async() => {
                     body: JSON.stringify(reqObject)
                 }
         );
-
         if (response.ok) {
             const data = await response.json();
 
             if (data.ok) {
                 Swal.fire({
                     title: "Information",
-                    text: "You are successfully registerd, Please check your inbox to verify your account!",
+                    text: "You are successfully sign in!",
                     icon: "success"
                 });
                 setTimeout(() => {
-                    window.location.href = "userVerify.html";
+                    window.location.href = "index.html";
                 }, 3000);
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                if (data.msg === "Not Verified") {
+                    Swal.fire({
+                        title: "Warning",
+                        text: "Your account not verified! please verify.",
+                        icon: "warning"
+                    });
+                    setTimeout(() => {
+                        window.location.href = "userVerify.html";
+                    }, 3000);
+
+                } else {
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
+                }
             }
         } else {
             console.error("Network error:", response.statusText);
@@ -44,5 +53,4 @@ const handlePress = async() => {
     } catch (e) {
         console.error("Fetch failed:", e);
     }
-
 };
