@@ -1,3 +1,19 @@
+const loadData = async() => {
+    try {
+        const response = await fetch("UserLoadCookie");
+
+        if (response.ok) {
+            const data = await response.json();
+
+            document.getElementById("email").value = data.email;
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
 const handlePress = async() => {
     const reqObject = {
         email: document.getElementById("email").value,
