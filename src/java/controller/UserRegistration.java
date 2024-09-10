@@ -58,7 +58,7 @@ public class UserRegistration extends HttpServlet {
         } else if (!Validate.isValidEmail(email)) {
             responseDTO.setMsg("Please enter valid email!");
         } else if (email.length() > 100) {
-            responseDTO.setMsg("First name must have less than 100 characters!");
+            responseDTO.setMsg("Email must have less than 100 characters!");
         } else if (password.isEmpty()) {
             responseDTO.setMsg("Please enter your password!");
         } else if (password.length() < 8 || password.length() > 20) {
