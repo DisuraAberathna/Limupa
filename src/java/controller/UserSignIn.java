@@ -72,7 +72,6 @@ public class UserSignIn extends HttpServlet {
                             Cookie passwordCookie = new Cookie("password", password);
 
                             emailCookie.setMaxAge(60 * 60 * 24 * 365);
-                            passwordCookie.setMaxAge(60 * 60 * 24 * 365);
 
                             resp.addCookie(emailCookie);
                             resp.addCookie(passwordCookie);
