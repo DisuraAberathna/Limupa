@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "city")
-public class Cities implements Serializable {
+public class City implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -28,7 +28,7 @@ public class Cities implements Serializable {
     @Column(name = "name", length = 45, nullable = false)
     private String name;
 
-    public Cities() {
+    public City() {
     }
 
     public int getId() {

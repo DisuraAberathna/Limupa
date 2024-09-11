@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import model.Validate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -112,7 +112,7 @@ public class AddProduct extends HttpServlet {
         } else if (image3.getSubmittedFileName() == null) {
             responseDTO.setMsg("Please select image 3");
         } else {
-            Session session = HibernateUtill.getSessionFactory().openSession();
+            Session session = HibernateUtil.getSessionFactory().openSession();
 
             try {
                 Category category = (Category) session.get(Category.class, Integer.valueOf(categoryId));
