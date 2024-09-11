@@ -11,7 +11,9 @@ import entity.Brand;
 import entity.Category;
 import entity.Color;
 import entity.Model;
+import entity.Product;
 import entity.ProductCondition;
+import entity.User;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -45,6 +47,15 @@ public class UserLoadData extends HttpServlet {
         userDTO.setL_name(user.getL_name());
         userDTO.setEmail(user.getEmail());
 
+        Criteria userCriteria = session.createCriteria(User.class);
+        userCriteria.add(Restrictions.eq("id", user.getId()));
+        User seller = (User) userCriteria.list().get(0);
+
+        Criteria productCriteria = session.createCriteria(Product.class);
+        productCriteria.add(Restrictions.eq("user", seller));
+        productCriteria.addOrder(Order.asc("id"));
+        List<Product> productList = productCriteria.list();
+
         Criteria categoryCriteria = session.createCriteria(Category.class);
         categoryCriteria.add(Restrictions.eq("status", 1));
         categoryCriteria.addOrder(Order.asc("name"));
@@ -70,6 +81,7 @@ public class UserLoadData extends HttpServlet {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("user", gson.toJsonTree(userDTO));
+        jsonObject.add("productList", gson.toJsonTree(productList));
         jsonObject.add("categoryList", gson.toJsonTree(categoryList));
         jsonObject.add("brandList", gson.toJsonTree(brandList));
         jsonObject.add("modelList", gson.toJsonTree(modelList));

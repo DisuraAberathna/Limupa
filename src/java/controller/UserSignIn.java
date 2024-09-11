@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.HibernateUtil;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -46,44 +47,49 @@ public class UserSignIn extends HttpServlet {
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
 
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("email", email));
-            criteria.add(Restrictions.eq("password", password));
+            try {
+                Criteria criteria = session.createCriteria(User.class);
+                criteria.add(Restrictions.eq("email", email));
+                criteria.add(Restrictions.eq("password", password));
 
-            if (!criteria.list().isEmpty()) {
-                User user = (User) criteria.list().get(0);
+                if (!criteria.list().isEmpty()) {
+                    User user = (User) criteria.list().get(0);
 
-                if (user.getStatus() == 1) {
-                    if (!user.getVerification().equals("Verified")) {
-                        req.getSession().setAttribute("email", email);
-                        responseDTO.setMsg("Not Verified");
-                    } else {
-                        UserDTO userDTO = new UserDTO();
-                        userDTO.setId(user.getId());
-                        userDTO.setF_name(user.getF_name());
-                        userDTO.setL_name(user.getL_name());
-                        userDTO.setEmail(email);
-                        userDTO.setPassword(null);
+                    if (user.getStatus() == 1) {
+                        if (!user.getVerification().equals("Verified")) {
+                            req.getSession().setAttribute("email", email);
+                            responseDTO.setMsg("Not Verified");
+                        } else {
+                            UserDTO userDTO = new UserDTO();
+                            userDTO.setId(user.getId());
+                            userDTO.setF_name(user.getF_name());
+                            userDTO.setL_name(user.getL_name());
+                            userDTO.setEmail(email);
+                            userDTO.setPassword(null);
 
-                        req.getSession(true).setAttribute("user", userDTO);
+                            req.getSession(true).setAttribute("user", userDTO);
 
-                        if (remember_me) {
-                            Cookie emailCookie = new Cookie("email", email);
-                            Cookie passwordCookie = new Cookie("password", password);
+                            if (remember_me) {
+                                Cookie emailCookie = new Cookie("email", email);
+                                Cookie passwordCookie = new Cookie("password", password);
 
-                            emailCookie.setMaxAge(60 * 60 * 24 * 365);
+                                emailCookie.setMaxAge(60 * 60 * 24 * 365);
 
-                            resp.addCookie(emailCookie);
-                            resp.addCookie(passwordCookie);
+                                resp.addCookie(emailCookie);
+                                resp.addCookie(passwordCookie);
+                            }
+
+                            responseDTO.setOk(true);
                         }
-
-                        responseDTO.setOk(true);
+                    } else {
+                        responseDTO.setMsg("Your account was suspended!");
                     }
                 } else {
-                    responseDTO.setMsg("Your account was suspended!");
+                    responseDTO.setMsg("Invalid credentials!");
                 }
-            } else {
-                responseDTO.setMsg("Invalid credentials!");
+            } catch (HibernateException e) {
+                System.out.println(e.getMessage());
+                responseDTO.setMsg("unable to process request");
             }
             session.close();
         }
