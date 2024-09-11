@@ -41,7 +41,7 @@ public class Address implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "city_id")
-    private Cities city;
+    private City city;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -90,11 +90,11 @@ public class Address implements Serializable {
         this.mobile = mobile;
     }
 
-    public Cities getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(Cities city) {
+    public void setCity(City city) {
         this.city = city;
     }
 

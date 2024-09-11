@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import model.Mail;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -152,7 +152,7 @@ public class UserResendOTP extends HttpServlet {
                 String id = req.getSession().getAttribute("id").toString();
                 String password = req.getSession().getAttribute("password").toString();
 
-                Session session = HibernateUtill.getSessionFactory().openSession();
+                Session session = HibernateUtil.getSessionFactory().openSession();
                 Criteria criteria = session.createCriteria(User.class);
                 criteria.add(Restrictions.eq("id", Integer.valueOf(id)));
 

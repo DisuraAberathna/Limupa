@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import model.Validate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -47,7 +47,7 @@ public class AddToCart extends HttpServlet {
         } else if (!Validate.isInteger(qty)) {
             responseDTO.setMsg("Invalid quantity! Please add a valid quantity.");
         } else {
-            Session session = HibernateUtill.getSessionFactory().openSession();
+            Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
 
             try {

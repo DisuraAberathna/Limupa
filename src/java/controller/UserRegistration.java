@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import model.Mail;
 import model.Validate;
 import org.hibernate.Criteria;
@@ -69,7 +69,7 @@ public class UserRegistration extends HttpServlet {
         } else if (!password.equals(confirm_password)) {
             responseDTO.setMsg("Passwords do not match!");
         } else {
-            Session session = HibernateUtill.getSessionFactory().openSession();
+            Session session = HibernateUtil.getSessionFactory().openSession();
 
             try {
                 Criteria criteria = session.createCriteria(User.class);

@@ -21,7 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -40,7 +40,7 @@ public class UserLoadData extends HttpServlet {
 
         UserDTO user = (UserDTO) req.getSession().getAttribute("user");
 
-        Session session = HibernateUtill.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
 
         UserDTO userDTO = new UserDTO();
         userDTO.setF_name(user.getF_name());

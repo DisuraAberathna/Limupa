@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.HibernateUtill;
+import model.HibernateUtil;
 import model.Mail;
 import model.Validate;
 import org.hibernate.Criteria;
@@ -64,7 +64,7 @@ public class UserAccountUpdate extends HttpServlet {
         } else {
             if (req.getSession().getAttribute("user") != null) {
                 UserDTO sessionUser = (UserDTO) req.getSession().getAttribute("user");
-                Session session = HibernateUtill.getSessionFactory().openSession();
+                Session session = HibernateUtil.getSessionFactory().openSession();
 
                 try {
                     Criteria criteria = session.createCriteria(User.class);
