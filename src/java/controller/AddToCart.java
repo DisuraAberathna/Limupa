@@ -37,19 +37,20 @@ public class AddToCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
         ResponseDTO responseDTO = new ResponseDTO();
 
-        try {
-            String id = req.getParameter("id");
-            String qty = req.getParameter("qty");
+        String id = req.getParameter("id");
+        String qty = req.getParameter("qty");
 
-            if (!Validate.isInteger(id)) {
-                responseDTO.setMsg("Product not found! Please try again later.");
-            } else if (!Validate.isInteger(qty)) {
-                responseDTO.setMsg("Invalid quantity! Please add a valid quantity.");
-            } else {
+        if (!Validate.isInteger(id)) {
+            responseDTO.setMsg("Product not found! Please try again later.");
+        } else if (!Validate.isInteger(qty)) {
+            responseDTO.setMsg("Invalid quantity! Please add a valid quantity.");
+        } else {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+
+            try {
                 int productId = Integer.parseInt(id);
                 int productQty = Integer.parseInt(qty);
 
@@ -82,7 +83,7 @@ public class AddToCart extends HttpServlet {
 
                                     responseDTO.setOk(true);
                                 } else {
-                                    responseDTO.setMsg("");
+                                    responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
                                 }
                             } else {
                                 Cart cartItem = (Cart) cartCriteria.uniqueResult();
@@ -123,7 +124,7 @@ public class AddToCart extends HttpServlet {
 
                                         responseDTO.setOk(true);
                                     } else {
-                                        responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
+                                        responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
                                     }
                                 }
                             } else {
@@ -139,7 +140,7 @@ public class AddToCart extends HttpServlet {
 
                                     responseDTO.setOk(true);
                                 } else {
-                                    responseDTO.setMsg("Can't update your cart! Quantity is unavailable");
+                                    responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
                                 }
                             }
                         }
@@ -147,12 +148,13 @@ public class AddToCart extends HttpServlet {
                         responseDTO.setMsg("Product not found!");
                     }
                 }
+            } catch (NumberFormatException | HibernateException e) {
+                System.out.println(e.getMessage());
+                responseDTO.setMsg("unable to process request");
             }
             session.close();
-        } catch (NumberFormatException | HibernateException e) {
-            System.out.println(e.getMessage());
-            responseDTO.setMsg("unable to process request");
         }
+
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(responseDTO));
     }
