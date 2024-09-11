@@ -30,6 +30,7 @@ import javax.servlet.http.Part;
 import model.HibernateUtil;
 import model.Validate;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -113,85 +114,89 @@ public class AddProduct extends HttpServlet {
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
 
-            Category category = (Category) session.get(Category.class, Integer.valueOf(categoryId));
+            try {
+                Category category = (Category) session.get(Category.class, Integer.valueOf(categoryId));
 
-            if (category == null) {
-                responseDTO.setMsg("Please select a valid category!");
-            } else {
-                Brand brand = (Brand) session.get(Brand.class, Integer.valueOf(brandId));
-
-                if (brand == null) {
-                    responseDTO.setMsg("Please select a valid brand!");
+                if (category == null) {
+                    responseDTO.setMsg("Please select a valid category!");
                 } else {
-                    if (brand.getCategory().getId() != category.getId()) {
+                    Brand brand = (Brand) session.get(Brand.class, Integer.valueOf(brandId));
+
+                    if (brand == null) {
                         responseDTO.setMsg("Please select a valid brand!");
                     } else {
-                        Model model = (Model) session.get(Model.class, Integer.valueOf(modelId));
-
-                        if (model == null) {
-                            responseDTO.setMsg("Please select a valid model!");
+                        if (brand.getCategory().getId() != category.getId()) {
+                            responseDTO.setMsg("Please select a valid brand!");
                         } else {
-                            if (model.getBrand().getId() != brand.getId()) {
+                            Model model = (Model) session.get(Model.class, Integer.valueOf(modelId));
+
+                            if (model == null) {
                                 responseDTO.setMsg("Please select a valid model!");
                             } else {
-                                ProductCondition condition = (ProductCondition) session.get(ProductCondition.class, Integer.valueOf(conditionId));
-
-                                if (condition == null) {
-                                    responseDTO.setMsg("Please select a valid condition!");
+                                if (model.getBrand().getId() != brand.getId()) {
+                                    responseDTO.setMsg("Please select a valid model!");
                                 } else {
-                                    Color color = (Color) session.get(Color.class, Integer.valueOf(colorId));
+                                    ProductCondition condition = (ProductCondition) session.get(ProductCondition.class, Integer.valueOf(conditionId));
 
-                                    if (color == null) {
-                                        responseDTO.setMsg("Please select a valid color!");
+                                    if (condition == null) {
+                                        responseDTO.setMsg("Please select a valid condition!");
                                     } else {
-                                        Product product = new Product();
-                                        product.setModel(model);
-                                        product.setTitle(title);
-                                        product.setDescription(description);
-                                        product.setProductCondition(condition);
-                                        product.setColor(color);
-                                        product.setPrice(Double.parseDouble(price));
-                                        product.setShipping(Double.parseDouble(shipping));
-                                        product.setQty(Integer.parseInt(qty));
-                                        product.setDate_time(new Date());
-                                        product.setStatus(1);
+                                        Color color = (Color) session.get(Color.class, Integer.valueOf(colorId));
 
-                                        UserDTO userDTO = (UserDTO) req.getSession().getAttribute("user");
-                                        Criteria criteria = session.createCriteria(User.class);
-                                        criteria.add(Restrictions.eq("id", userDTO.getId()));
-                                        User user = (User) criteria.uniqueResult();
-                                        product.setUser(user);
+                                        if (color == null) {
+                                            responseDTO.setMsg("Please select a valid color!");
+                                        } else {
+                                            Product product = new Product();
+                                            product.setModel(model);
+                                            product.setTitle(title);
+                                            product.setDescription(description);
+                                            product.setProductCondition(condition);
+                                            product.setColor(color);
+                                            product.setPrice(Double.parseDouble(price));
+                                            product.setShipping(Double.parseDouble(shipping));
+                                            product.setQty(Integer.parseInt(qty));
+                                            product.setDate_time(new Date());
+                                            product.setStatus(1);
 
-                                        int productID = (int) session.save(product);
-                                        session.beginTransaction().commit();
+                                            UserDTO userDTO = (UserDTO) req.getSession().getAttribute("user");
+                                            Criteria criteria = session.createCriteria(User.class);
+                                            criteria.add(Restrictions.eq("id", userDTO.getId()));
+                                            User user = (User) criteria.uniqueResult();
+                                            product.setUser(user);
 
-                                        String applicationPath = req.getServletContext().getRealPath("");
-                                        String newApplicationPath = applicationPath.replace("build" + File.separator + "web", "web");
-                                        File folder = new File(newApplicationPath + "//images//product//" + productID);
-                                        folder.mkdir();
+                                            int productID = (int) session.save(product);
+                                            session.beginTransaction().commit();
 
-                                        File imageFile_1 = new File(folder, productID + "image1.png");
-                                        InputStream inputStreamImage_1 = image1.getInputStream();
-                                        Files.copy(inputStreamImage_1, imageFile_1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                            String applicationPath = req.getServletContext().getRealPath("");
+                                            String newApplicationPath = applicationPath.replace("build" + File.separator + "web", "web");
+                                            File folder = new File(newApplicationPath + "//images//product//" + productID);
+                                            folder.mkdir();
 
-                                        File imageFile_2 = new File(folder, productID + "image2.png");
-                                        InputStream inputStreamImage_2 = image2.getInputStream();
-                                        Files.copy(inputStreamImage_2, imageFile_2.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                            File imageFile_1 = new File(folder, productID + "image1.png");
+                                            InputStream inputStreamImage_1 = image1.getInputStream();
+                                            Files.copy(inputStreamImage_1, imageFile_1.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                                        File imageFile_3 = new File(folder, productID + "image3.png");
-                                        InputStream inputStreamImage_3 = image3.getInputStream();
-                                        Files.copy(inputStreamImage_3, imageFile_3.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                            File imageFile_2 = new File(folder, productID + "image2.png");
+                                            InputStream inputStreamImage_2 = image2.getInputStream();
+                                            Files.copy(inputStreamImage_2, imageFile_2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                                        responseDTO.setOk(true);
-                                        responseDTO.setMsg("Your new product was added!");
+                                            File imageFile_3 = new File(folder, productID + "image3.png");
+                                            InputStream inputStreamImage_3 = image3.getInputStream();
+                                            Files.copy(inputStreamImage_3, imageFile_3.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                                            responseDTO.setOk(true);
+                                            responseDTO.setMsg("Your new product was added!");
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            } catch (IOException | NumberFormatException | HibernateException e) {
+                System.out.println(e.getMessage());
+                responseDTO.setMsg("unable to process request");
             }
-
             session.close();
         }
 
