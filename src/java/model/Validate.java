@@ -14,6 +14,10 @@ public class Validate {
         return text.matches("\\d+");
     }
 
+    public static boolean isValidMobile(String text) {
+        return text.matches("^07[01245678]{1}[0-9]{7}$");
+    }
+
     public static boolean isValidEmail(String text) {
         return text.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     }
