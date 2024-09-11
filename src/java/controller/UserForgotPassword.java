@@ -179,7 +179,7 @@ public class UserForgotPassword extends HttpServlet {
                 }
             } catch (HibernateException e) {
                 System.out.println(e.getMessage());
-                responseDTO.setMsg("unable to process request");
+                responseDTO.setMsg("Unable to process request!");
             }
             session.close();
         }
