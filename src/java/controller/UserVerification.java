@@ -146,7 +146,7 @@ public class UserVerification extends HttpServlet {
             }
         } catch (NumberFormatException | HibernateException e) {
             System.out.println(e.getMessage());
-            responseDTO.setMsg("unable to process request");
+            responseDTO.setMsg("Unable to process request!");
         }
 
         resp.setContentType("application/json");

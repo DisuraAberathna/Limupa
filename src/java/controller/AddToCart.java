@@ -150,11 +150,10 @@ public class AddToCart extends HttpServlet {
                 }
             } catch (NumberFormatException | HibernateException e) {
                 System.out.println(e.getMessage());
-                responseDTO.setMsg("unable to process request");
+                responseDTO.setMsg("Unable to process request!");
             }
             session.close();
         }
-
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(responseDTO));
     }
