@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.HibernateUtil;
+import model.HibernateUtill;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -36,7 +36,7 @@ public class LoadCart extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
         HttpSession httpSession = req.getSession();
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtill.getSessionFactory().openSession();
         ArrayList<CartDTO> cartDTOList = new ArrayList<>();
 
         try {

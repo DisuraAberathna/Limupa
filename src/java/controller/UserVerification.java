@@ -15,7 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.HibernateUtil;
+import model.HibernateUtill;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -43,7 +43,7 @@ public class UserVerification extends HttpServlet {
                 String sesotp = req.getSession().getAttribute("otp").toString();
 
                 if (sesotp.equals(otp)) {
-                    Session session = HibernateUtil.getSessionFactory().openSession();
+                    Session session = HibernateUtill.getSessionFactory().openSession();
 
                     Criteria criteria = session.createCriteria(User.class);
                     criteria.add(Restrictions.eq("id", Integer.valueOf(id)));
@@ -81,7 +81,7 @@ public class UserVerification extends HttpServlet {
                 String sesotp = req.getSession().getAttribute("otp").toString();
 
                 if (sesotp.equals(otp)) {
-                    Session session = HibernateUtil.getSessionFactory().openSession();
+                    Session session = HibernateUtill.getSessionFactory().openSession();
 
                     Criteria criteria = session.createCriteria(User.class);
                     criteria.add(Restrictions.eq("id", Integer.valueOf(id)));
@@ -116,7 +116,7 @@ public class UserVerification extends HttpServlet {
             } else if (req.getSession().getAttribute("email") != null) {
                 String email = req.getSession().getAttribute("email").toString();
 
-                Session session = HibernateUtil.getSessionFactory().openSession();
+                Session session = HibernateUtill.getSessionFactory().openSession();
                 Criteria criteria = session.createCriteria(User.class);
                 criteria.add(Restrictions.eq("email", email));
                 criteria.add(Restrictions.eq("verification", otp));
