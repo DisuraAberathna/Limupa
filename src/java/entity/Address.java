@@ -34,10 +34,10 @@ public class Address implements Serializable {
     private String line_2;
 
     @Column(name = "postal_code", length = 5, nullable = false)
-    private int postal_code;
+    private String postal_code;
 
     @Column(name = "mobile", length = 10, nullable = false)
-    private int mobile;
+    private String mobile;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
@@ -46,6 +46,9 @@ public class Address implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "status", nullable = false)
+    private int status;
 
     public Address() {
     }
@@ -74,19 +77,19 @@ public class Address implements Serializable {
         this.line_2 = line_2;
     }
 
-    public int getPostal_code() {
+    public String getPostal_code() {
         return postal_code;
     }
 
-    public void setPostal_code(int postal_code) {
+    public void setPostal_code(String postal_code) {
         this.postal_code = postal_code;
     }
 
-    public int getMobile() {
+    public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(int mobile) {
+    public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
@@ -104,6 +107,14 @@ public class Address implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
 }
