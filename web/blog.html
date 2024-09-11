@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
-  <!-- login-register31:27-->
+  <!-- blog-list31:56-->
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>User Profile | Limupa</title>
+    <title>
+      Blog | Limupa
+      Template
+    </title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Favicon -->
@@ -42,7 +45,7 @@
     <!-- Modernizr js -->
     <script src="js/lib/vendor/modernizr-2.8.3.min.js"></script>
   </head>
-  <body onload="loadData();">
+  <body>
     <div class="body-wrapper">
       <!-- Begin Header Area -->
       <header>
@@ -199,468 +202,355 @@
           <div class="breadcrumb-content">
             <ul>
               <li><a href="index.html">Home</a></li>
-              <li class="active">User Profile</li>
+              <li class="active">Blog List</li>
             </ul>
           </div>
         </div>
       </div>
       <!-- Li's Breadcrumb Area End Here -->
-      <!-- Begin Login Content Area -->
-      <div class="page-section mt-60 mb-60">
+      <!-- Begin Li's Main Blog Page Area -->
+      <div class="li-main-blog-page pt-60 pb-55">
         <div class="container">
-          <div class="row pt-25 pb-25">
-            <div class="d-lg-flex align-items-start">
-              <div
-                class="nav flex-column nav-pills col-lg-3 col-md-4 mb-25 mb-lg-0"
-                id="v-pills-tab"
-                role="tablist"
-                aria-orientation="vertical"
-              >
-                <button
-                  class="profile-sidebar-btn active"
-                  id="v-pills-profile-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-profile"
-                  aria-selected="true"
-                >
-                  <img src="images/user.png" alt="" />
-                  Account Details
-                </button>
-                <button
-                  class="profile-sidebar-btn"
-                  id="v-pills-add-product-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-add-product"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-add-product"
-                  aria-selected="false"
-                >
-                  <img src="images/add-product.png" alt="" />
-                  Add Product
-                </button>
-                <button
-                  class="profile-sidebar-btn"
-                  id="v-pills-my-products-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-my-products"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-my-products"
-                  aria-selected="false"
-                >
-                  <img src="images/list.png" alt="" />
-                  My Products
-                </button>
-                <button
-                  class="profile-sidebar-btn"
-                  id="v-pills-order-history-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-order-history"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-order-history"
-                  aria-selected="false"
-                >
-                  <img src="images/cart.png" alt="" />
-                  Order History
-                </button>
-                <button
-                  class="profile-sidebar-btn"
-                  id="v-pills-address-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-address"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-address"
-                  aria-selected="false"
-                >
-                  <img src="images/address.png" alt="" />
-                  Address
-                </button>
-                <button class="profile-sidebar-btn" onclick="signout();">
-                  <img src="images/signout.png" alt="" />
-                  Sign Out
-                </button>
-              </div>
-              <div
-                class="col-lg-9 col-md-8 tab-content"
-                id="v-pills-tabContent"
-              >
-                <div
-                  class="tab-pane fade show active"
-                  id="v-pills-profile"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-profile-tab"
-                  tabindex="0"
-                >
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">Account Details</h4>
-                      <div class="row">
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>First Name*</label>
-                          <input
-                            class="mb-0"
-                            type="text"
-                            id="f_name"
-                            placeholder="First Name"
-                            onkeypress="return hasDigit(event);"
-                          />
+          <div class="row">
+            <!-- Begin Li's Main Content Area -->
+            <div class="col-lg-12">
+              <div class="row li-main-content">
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item pb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="li-blog-banner">
+                          <a href="blog-details-left-sidebar.html"
+                            ><img
+                              class="img-full"
+                              src="images/blog-banner/2.jpg"
+                              alt=""
+                          /></a>
                         </div>
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>Last Name*</label>
-                          <input
-                            class="mb-0"
-                            type="text"
-                            id="l_name"
-                            placeholder="Last Name"
-                            onkeypress="return hasDigit(event);"
-                          />
-                        </div>
-                        <div class="col-12 mb-20">
-                          <label>Email Address*</label>
-                          <input
-                            class="mb-0"
-                            type="email"
-                            id="email"
-                            placeholder="Email Address"
-                          />
-                        </div>
-                        <div
-                          class="offset-4 offset-lg-6 col-8 col-lg-6 d-flex pt-10 pb-10"
-                        >
-                          <button
-                            type="button"
-                            onclick="updateAccount();"
-                            class="profile-button mt-0"
-                          >
-                            Update
-                          </button>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog image post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </form>
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">Security Details</h4>
-                      <div class="row">
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>New Password*</label>
-                          <input
-                            class="mb-0"
-                            type="password"
-                            id="password"
-                            placeholder="New Password"
-                          />
-                        </div>
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>Confirm Password*</label>
-                          <input
-                            class="mb-0"
-                            type="password"
-                            id="confirm_password"
-                            placeholder="Confirm Password"
-                          />
-                        </div>
-                        <div
-                          class="offset-4 offset-lg-6 col-8 col-lg-6 d-flex pt-10 pb-10"
-                        >
-                          <button
-                            type="button"
-                            onclick="updateSecurity();"
-                            class="profile-button mt-0"
-                          >
-                            Update
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+                  </div>
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="v-pills-add-product"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-add-product-tab"
-                  tabindex="0"
-                >
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">Add Product</h4>
-                      <div class="row">
-                        <div class="col-md-4 col-12 mb-20">
-                          <label>Category*</label>
-                          <select
-                            id="category-select"
-                            onchange="updateBrands();"
-                          >
-                            <option value="0">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-4 col-12 mb-20">
-                          <label>Brand*</label>
-                          <select id="brand-select" onchange="updateModels();">
-                            <option value="0">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-4 col-12 mb-20">
-                          <label>Model*</label>
-                          <select id="model-select">
-                            <option value="0">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-12 mb-20">
-                          <label>Title*</label>
-                          <input
-                            class="mb-0"
-                            type="text"
-                            id="title"
-                            placeholder="Title"
-                          />
-                        </div>
-                        <div class="col-12 mb-20">
-                          <label>Description*</label>
-                          <textarea
-                            id="description"
-                            rows="8"
-                            placeholder="Description"
-                          ></textarea>
-                        </div>
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>Condition*</label>
-                          <select id="condition-select">
-                            <option value="0">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6 col-12 mb-20">
-                          <label>Colour*</label>
-                          <select id="color-select">
-                            <option value="0">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-4 mb-20">
-                          <label>Price*</label>
-                          <input
-                            class="mb-0"
-                            type="text"
-                            id="price"
-                            placeholder="Price"
-                            oninput="isDouble(this);"
-                          />
-                        </div>
-                        <div class="col-md-4 mb-20">
-                          <label>Shipping Fee*</label>
-                          <input
-                            class="mb-0"
-                            type="text"
-                            id="shipping"
-                            placeholder="Shipping Fee"
-                            oninput="isDouble(this);"
-                          />
-                        </div>
-                        <div class="col-md-4 mb-20">
-                          <label>Quantity*</label>
-                          <input
-                            class="mb-0"
-                            type="number"
-                            id="qty"
-                            placeholder="Quantity"
-                          />
-                        </div>
-                        <div class="col-md-4 mb-20 mt-20">
-                          <div class="col-12 border">
-                            <img
-                              src="images/addImage.png"
-                              class="add-product-img img-fluid"
-                              id="image-1-view"
-                            />
-                          </div>
-                          <label
-                            for="image-1"
-                            class="profile-button text-center"
-                            >Choose Image 1</label
-                          >
-                          <input
-                            class="mb-0 d-none"
-                            type="file"
-                            id="image-1"
-                            accept="image/*"
-                            onchange="loadImage1();"
-                          />
-                        </div>
-                        <div class="col-md-4 mb-20 mt-20">
-                          <div class="col-12 border">
-                            <img
-                              src="images/addImage.png"
-                              class="add-product-img img-fluid"
-                              id="image-2-view"
-                            />
-                          </div>
-                          <label
-                            for="image-2"
-                            class="profile-button text-center"
-                            >Choose Image 2</label
-                          >
-                          <input
-                            class="mb-0 d-none"
-                            type="file"
-                            id="image-2"
-                            accept="image/*"
-                            onchange="loadImage2();"
-                          />
-                        </div>
-                        <div class="col-md-4 mb-20 mt-20">
-                          <div class="col-12 border">
-                            <img
-                              src="images/addImage.png"
-                              class="add-product-img img-fluid"
-                              id="image-3-view"
-                            />
-                          </div>
-                          <label
-                            for="image-3"
-                            class="profile-button text-center"
-                            >Choose Image 3</label
-                          >
-                          <input
-                            class="mb-0 d-none"
-                            type="file"
-                            id="image-3"
-                            accept="image/*"
-                            onchange="loadImage3();"
-                          />
-                        </div>
-                        <div
-                          class="offset-2 offset-lg-3 col-8 col-lg-6 d-flex pt-10 pb-10"
-                        >
-                          <button
-                            type="button"
-                            onclick="addProduct();"
-                            class="profile-button mt-0"
-                          >
-                            Add Product
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="v-pills-my-products"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-my-products-tab"
-                  tabindex="0"
-                >
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">My Products</h4>
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th>1</th>
-                            <td class="d-flex">
-                              <img
-                                src="images/product/1/1image1.png"
-                                class="img-thumbnail table-img"
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item pb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="li-blog-gallery-slider slick-dot-style">
+                          <div class="li-blog-banner">
+                            <a href="blog-details-left-sidebar.html"
+                              ><img
+                                class="img-full"
+                                src="images/blog-banner/1.jpg"
                                 alt=""
-                              />
-                              <div class="pl-10 pr-10">
-                                <h5>ASUS Vivobook X515</h5>
-                                <span>
-                                  Operating System Windows 10 Home - ASUS
-                                  recommends Windows 10 Pro for business...
-                                </span>
-                                <a href="#">more</a>
-                              </div>
-                            </td>
-                            <td class="table-col-price">LKR 200000.00</td>
-                            <td class="text-center">10</td>
-                            <td class="table-col-btns text-center">
-                              <a href="#" class="mt-0 btn-sm">Update</a>
-                              <a href="#" class="mt-0 btn-sm">Delete</a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                            /></a>
+                          </div>
+                          <div class="li-blog-banner">
+                            <a href="blog-details-left-sidebar.html"
+                              ><img
+                                class="img-full"
+                                src="images/blog-banner/2.jpg"
+                                alt=""
+                            /></a>
+                          </div>
+                          <div class="li-blog-banner">
+                            <a href="blog-details-left-sidebar.html"
+                              ><img
+                                class="img-full"
+                                src="images/blog-banner/3.jpg"
+                                alt=""
+                            /></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog gallery post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="v-pills-order-history"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-order-history-tab"
-                  tabindex="0"
-                >
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">Order History</h4>
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item pb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div
+                          class="li-blog-banner embed-responsive embed-responsive-16by9"
+                        >
+                          <iframe
+                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/300107209&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"
+                          ></iframe>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog audio post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="v-pills-address"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-address-tab"
-                  tabindex="0"
-                >
-                  <form>
-                    <div class="profile-form">
-                      <h4 class="profile-title">Address</h4>
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item pb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div
+                          class="li-blog-banner embed-responsive embed-responsive-16by9"
+                        >
+                          <iframe
+                            src="https://www.youtube.com/embed/DR2c266yWEA"
+                            allow="autoplay; encrypted-media"
+                            allowfullscreen
+                          ></iframe>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog video post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item pb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="li-blog-banner">
+                          <a href="blog-details-left-sidebar.html"
+                            ><img
+                              class="img-full"
+                              src="images/blog-banner/5.jpg"
+                              alt=""
+                          /></a>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog fifth post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="li-blog-single-item mb-30">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="li-blog-banner">
+                          <a href="blog-details-left-sidebar.html"
+                            ><img
+                              class="img-full"
+                              src="images/blog-banner/6.jpg"
+                              alt=""
+                          /></a>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="li-blog-content">
+                          <div class="li-blog-details">
+                            <h3 class="li-blog-heading pt-xs-25 pt-sm-25">
+                              <a href="blog-details-left-sidebar.html"
+                                >blog second post</a
+                              >
+                            </h3>
+                            <div class="li-blog-meta">
+                              <a class="author" href="#"
+                                ><i class="fa fa-user"></i>Admin</a
+                              >
+                              <a class="comment" href="#"
+                                ><i class="fa fa-comment-o"></i> 3 comment</a
+                              >
+                              <a class="post-time" href="#"
+                                ><i class="fa fa-calendar"></i> 25 nov 2018</a
+                              >
+                            </div>
+                            <p>
+                              Donec vitae hendrerit arcu, sit amet faucibus
+                              nisl. Cras pretium arcu ex. Aenean posuere libero
+                              eu augue condimentum rhoncus. Cras pretium arcu
+                              ex.
+                            </p>
+                            <a
+                              class="read-more"
+                              href="blog-details-left-sidebar.html"
+                              >Read More...</a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Begin Li's Pagination Area -->
+                <div class="col-lg-12">
+                  <div class="li-paginatoin-area text-center pt-25">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <ul class="li-pagination-box">
+                          <li><a class="Previous" href="#">Previous</a></li>
+                          <li class="active"><a href="#">1</a></li>
+                          <li><a href="#">2</a></li>
+                          <li><a href="#">3</a></li>
+                          <li><a class="Next" href="#">Next</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Li's Pagination End Here Area -->
               </div>
             </div>
+            <!-- Li's Main Content Area End Here -->
           </div>
         </div>
       </div>
-      <!-- Login Content Area End Here -->
-
+      <!-- Li's Main Blog Page Area End Here -->
       <!-- Begin Footer Area -->
       <div class="footer">
         <!-- Begin Footer Static Top Area -->
@@ -1003,13 +893,7 @@
     <script src="js/lib/scrollUp.min.js"></script>
     <!-- Main/Activator js -->
     <script src="js/lib/main.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="js/Script.js"></script>
-    <script src="js/ProfileUser.js"></script>
   </body>
 
-  <!-- login-register31:27-->
+  <!-- blog-list31:56-->
 </html>

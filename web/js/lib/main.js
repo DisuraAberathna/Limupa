@@ -90,32 +90,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
 /*----------------------------------------*/
 /* 06. Li's Product Activision
 /*----------------------------------------*/
-	$(".product-active").owlCarousel({
-		loop: true,
-		nav: true,
-		dots: false,
-		autoplay: false,
-		autoplayTimeout: 5000,
-		navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-		item: 5,
-		responsive: {
-			0: {
-					items: 1
-			},
-			480: {
-					items: 2
-			},
-			768: {
-					items: 3
-			},
-			992: {
-					items: 4
-			},
-			1200: {
-					items: 5
-			}
-		}
-	});
+
 /*----------------------------------------*/
 /* 07. Li's Product Activision
 /*----------------------------------------*/
