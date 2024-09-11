@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author SINGER
  */
-@WebFilter(urlPatterns = {"/userProfile.html"})
+@WebFilter(urlPatterns = {"/userProfile.html", "/checkout.html"})
 public class checkSignedInUser implements Filter {
 
     @Override
@@ -31,7 +31,7 @@ public class checkSignedInUser implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        
+
         if (req.getSession().getAttribute("user") != null) {
             chain.doFilter(request, response);
         } else {

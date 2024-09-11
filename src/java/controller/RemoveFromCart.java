@@ -18,7 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.HibernateUtil;
+import model.HibernateUtill;
 import model.Validate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -43,7 +43,7 @@ public class RemoveFromCart extends HttpServlet {
         if (!Validate.isInteger(id)) {
             responseDTO.setMsg("Product not found! Please try again later.");
         } else {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+            Session session = HibernateUtill.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
 
             try {

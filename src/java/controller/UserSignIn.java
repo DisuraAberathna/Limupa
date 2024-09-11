@@ -16,7 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.HibernateUtil;
+import model.HibernateUtill;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -45,7 +45,7 @@ public class UserSignIn extends HttpServlet {
         } else if (password.isEmpty()) {
             responseDTO.setMsg("Please enter your password!");
         } else {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+            Session session = HibernateUtill.getSessionFactory().openSession();
 
             try {
                 Criteria criteria = session.createCriteria(User.class);

@@ -3,7 +3,7 @@ var modelList;
 
 const loadData = async() => {
     try {
-        const response = await fetch("LoadUserData");
+        const response = await fetch("UserLoadData");
 
         if (response.ok) {
             const data = await response.json();
@@ -15,6 +15,8 @@ const loadData = async() => {
             modelList = data.modelList;
             const colorList = data.colorList;
             const conditionList = data.conditionList;
+
+            console.log(data.productList);
 
             loadSelectOptions("category-select", categoryList, ["id", "name", "status"]);
             loadSelectOptions("brand-select", brandList, ["id", "name", "status"]);
@@ -267,7 +269,7 @@ const addProduct = async() => {
                     text: data.msg,
                     icon: "success"
                 });
-                
+
                 category.value = 0;
                 brand.value = 0;
                 model.value = 0;

@@ -18,32 +18,34 @@ const loadData = async() => {
                 document.getElementById("sm-img-2").src = "images/product/" + id + "/" + id + "image2.png";
                 document.getElementById("sm-img-3").src = "images/product/" + id + "/" + id + "image3.png";
 
-                document.getElementById("title").innerHTML = data.product.title;
+                document.getElementById("title").innerHTML = data.product.title + " - " + data.product.color.name + " Colour";
                 document.getElementById("added-date").innerHTML = data.product.date_time;
-                document.getElementById("price").innerHTML = "LKR " + new Intl.NumberFormat(
-                        "en-US",
-                        {
-                            minimumFractionDigits: 2
-                        }
+                document.getElementById("price").innerHTML = "LKR " +
+                        new Intl.NumberFormat(
+                                "en-US",
+                                {
+                                    minimumFractionDigits: 2
+                                }
 
-                ).format(data.product.price);
+                        ).format(data.product.price);
 
+                document.getElementById("shipping").innerHTML = "Shipping Fee : " + data.product.shipping;
                 document.getElementById("category").innerHTML = "Category : " + data.product.model.brand.category.name;
                 document.getElementById("brand").innerHTML = "Brand : " + data.product.model.brand.name;
                 document.getElementById("model").innerHTML = "Model : " + data.product.model.name;
                 document.getElementById("condition").innerHTML = "Condition : " + data.product.productCondition.name;
                 document.getElementById("qty").innerHTML = data.product.qty;
-                document.getElementById("color").style.backgroundColor = data.product.color.name;
 
-                document.getElementById("add-to-cart-btn").addEventListener(
-                        "click",
-                        (e) => {
-                    addToCart(
-                            data.product.id,
-                            document.getElementById("add-to-cart-qty").value
-                            );
-                    e.preventDefault();
-                });
+                document.getElementById("add-to-cart-btn")
+                        .addEventListener(
+                                "click",
+                                (e) => {
+                            addToCart(
+                                    data.product.id,
+                                    document.getElementById("add-to-cart-qty").value
+                                    );
+                            e.preventDefault();
+                        });
 
                 document.getElementById("descriptions").innerHTML = data.product.description;
 
@@ -58,19 +60,21 @@ const loadData = async() => {
                     productCloneHtml.querySelector("#similer-product-title").href = "productView.html?id=" + item.id;
                     productCloneHtml.querySelector("#similer-product-condition").innerHTML = item.productCondition.name;
                     productCloneHtml.querySelector("#similer-product-title").innerHTML = item.title + " - " + item.color.name;
-                    productCloneHtml.querySelector("#similer-product-price").innerHTML = "LKR " + new Intl.NumberFormat(
-                            "en-US",
-                            {
-                                minimumFractionDigits: 2
-                            }
-                    ).format(item.price);
+                    productCloneHtml.querySelector("#similer-product-price").innerHTML = "LKR " +
+                            new Intl.NumberFormat(
+                                    "en-US",
+                                    {
+                                        minimumFractionDigits: 2
+                                    }
+                            ).format(item.price);
                     productCloneHtml.querySelector("#similer-product-qty").innerHTML = item.qty + " Items Left";
-                    productCloneHtml.querySelector("#similer-product-add-to-cart").addEventListener(
-                            "click",
-                            (e) => {
-                        addToCart(item.id, 1);
-                        e.preventDefault();
-                    });
+                    productCloneHtml.querySelector("#similer-product-add-to-cart")
+                            .addEventListener(
+                                    "click",
+                                    (e) => {
+                                addToCart(item.id, 1);
+                                e.preventDefault();
+                            });
 
                     document.getElementById("similer-product-main").appendChild(productCloneHtml);
                 });
@@ -108,6 +112,6 @@ const loadData = async() => {
             console.error("Fetch failed:", e);
         }
     } else {
-        window.location.href = "index.hrml";
+        window.location.href = "index.html";
     }
 };

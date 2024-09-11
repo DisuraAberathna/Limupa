@@ -12,7 +12,7 @@ import org.hibernate.cfg.Configuration;
  *
  * @author SINGER
  */
-public class HibernateUtil {
+public class HibernateUtill {
 
     private static final SessionFactory sessionFactory;
 

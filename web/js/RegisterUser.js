@@ -25,7 +25,7 @@ const handlePress = async() => {
             if (data.ok) {
                 Swal.fire({
                     title: "Information",
-                    text: "You are successfully registerd, Please check your inbox to verify your account!",
+                    text: "You are successfully registerd! Please check your inbox to verify your account.",
                     icon: "success"
                 });
                 setTimeout(() => {
