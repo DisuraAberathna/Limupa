@@ -18,6 +18,7 @@ import model.HibernateUtil;
 import model.Mail;
 import model.Validate;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -70,123 +71,127 @@ public class UserRegistration extends HttpServlet {
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
 
-            Criteria criteria = session.createCriteria(User.class);
-            criteria.add(Restrictions.eq("email", email));
+            try {
+                Criteria criteria = session.createCriteria(User.class);
+                criteria.add(Restrictions.eq("email", email));
 
-            if (criteria.list().isEmpty()) {
-                int otp = (int) (Math.random() * 1000000);
+                if (criteria.list().isEmpty()) {
+                    int otp = (int) (Math.random() * 1000000);
 
-                User user = new User();
-                user.setF_name(f_name);
-                user.setL_name(l_name);
-                user.setEmail(email);
-                user.setPassword(password);
-                user.setVerification(String.valueOf(otp));
-                user.setStatus(1);
+                    User user = new User();
+                    user.setF_name(f_name);
+                    user.setL_name(l_name);
+                    user.setEmail(email);
+                    user.setPassword(password);
+                    user.setVerification(String.valueOf(otp));
+                    user.setStatus(1);
 
-                Thread mailSender = new Thread() {
-                    @Override
-                    public void run() {
-                        String content = "<head>\n"
-                                + "  <style>\n"
-                                + "    body {\n"
-                                + "      font-family: Arial, sans-serif;\n"
-                                + "      background-color: #f4f4f4;\n"
-                                + "      margin: 0;\n"
-                                + "      padding: 0;\n"
-                                + "      -webkit-font-smoothing: antialiased;\n"
-                                + "      -moz-osx-font-smoothing: grayscale;\n"
-                                + "    }\n"
-                                + "    .email-container {\n"
-                                + "      max-width: 600px;\n"
-                                + "      margin: 0 auto;\n"
-                                + "      background-color: #ffffff;\n"
-                                + "      padding: 20px;\n"
-                                + "      border-radius: 8px;\n"
-                                + "      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n"
-                                + "    }\n"
-                                + "    .email-header {\n"
-                                + "      text-align: center;\n"
-                                + "      padding: 20px 0;\n"
-                                + "      background-color: #ff3333;\n"
-                                + "      color: white;\n"
-                                + "      border-radius: 8px 8px 0 0;\n"
-                                + "    }\n"
-                                + "    .email-body {\n"
-                                + "      padding: 20px;\n"
-                                + "      border-left: 2px solid #ff3333;\n"
-                                + "      border-right: 2px solid #ff3333;\n"
-                                + "      text-align: center;\n"
-                                + "    }\n"
-                                + "    .email-body p {\n"
-                                + "      font-size: 16px;\n"
-                                + "      color: #333333;\n"
-                                + "      line-height: 1.5;\n"
-                                + "      margin: 0 0 20px;\n"
-                                + "    }\n"
-                                + "    .verification-code {\n"
-                                + "      display: inline-block;\n"
-                                + "      font-size: 24px;\n"
-                                + "      color: #ff3333;\n"
-                                + "      background-color: #f4f4f4;\n"
-                                + "      padding: 10px 20px;\n"
-                                + "      border-radius: 5px;\n"
-                                + "      letter-spacing: 2px;\n"
-                                + "      margin: 20px 0;\n"
-                                + "    }\n"
-                                + "    .email-footer {\n"
-                                + "      text-align: center;\n"
-                                + "      font-size: 14px;\n"
-                                + "      color: #777777;\n"
-                                + "      padding: 20px 0;\n"
-                                + "      border-top: 1px solid #eeeeee;\n"
-                                + "      border-left: 2px solid #ff3333;\n"
-                                + "      border-right: 2px solid #ff3333;\n"
-                                + "      border-bottom: 2px solid #ff3333;\n"
-                                + "      border-bottom-left-radius: 10px;\n"
-                                + "      border-bottom-right-radius: 10px;\n"
-                                + "    }\n"
-                                + "    .email-footer a {\n"
-                                + "      color: #ff3333;\n"
-                                + "      text-decoration: none;\n"
-                                + "    }\n"
-                                + "  </style>\n"
-                                + "</head>\n"
-                                + "<body>\n"
-                                + "  <div class=\"email-container\">\n"
-                                + "    <div class=\"email-header\">\n"
-                                + "      <h1>Verification Code</h1>\n"
-                                + "    </div>\n"
-                                + "    <div class=\"email-body\">\n"
-                                + "      <p>Hello User,</p>\n"
-                                + "      <p>\n"
-                                + "        Thank you for registering with us. Please use the following verification\n"
-                                + "        code to complete your registration process:\n"
-                                + "      </p>\n"
-                                + "      <div class=\"verification-code\">" + otp + "</div>\n"
-                                + "      <p>If you did not request this, please ignore this email.</p>\n"
-                                + "    </div>\n"
-                                + "    <div class=\"email-footer\">\n"
-                                + "      <p>Best regards,</p>\n"
-                                + "      <p>The Limupa Team</p>\n"
-                                + "      <p><a href=\"#\">Contact Support</a></p>\n"
-                                + "    </div>\n"
-                                + "  </div>\n"
-                                + "</body>";
-                        Mail.sendMail(email, "Verify Your Account - Limupa", content);
-                    }
-                };
-                mailSender.start();
+                    Thread mailSender = new Thread() {
+                        @Override
+                        public void run() {
+                            String content = "<head>\n"
+                                    + "  <style>\n"
+                                    + "    body {\n"
+                                    + "      font-family: Arial, sans-serif;\n"
+                                    + "      background-color: #f4f4f4;\n"
+                                    + "      margin: 0;\n"
+                                    + "      padding: 0;\n"
+                                    + "      -webkit-font-smoothing: antialiased;\n"
+                                    + "      -moz-osx-font-smoothing: grayscale;\n"
+                                    + "    }\n"
+                                    + "    .email-container {\n"
+                                    + "      max-width: 600px;\n"
+                                    + "      margin: 0 auto;\n"
+                                    + "      background-color: #ffffff;\n"
+                                    + "      padding: 20px;\n"
+                                    + "      border-radius: 8px;\n"
+                                    + "      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n"
+                                    + "    }\n"
+                                    + "    .email-header {\n"
+                                    + "      text-align: center;\n"
+                                    + "      padding: 20px 0;\n"
+                                    + "      background-color: #ff3333;\n"
+                                    + "      color: white;\n"
+                                    + "      border-radius: 8px 8px 0 0;\n"
+                                    + "    }\n"
+                                    + "    .email-body {\n"
+                                    + "      padding: 20px;\n"
+                                    + "      border-left: 2px solid #ff3333;\n"
+                                    + "      border-right: 2px solid #ff3333;\n"
+                                    + "      text-align: center;\n"
+                                    + "    }\n"
+                                    + "    .email-body p {\n"
+                                    + "      font-size: 16px;\n"
+                                    + "      color: #333333;\n"
+                                    + "      line-height: 1.5;\n"
+                                    + "      margin: 0 0 20px;\n"
+                                    + "    }\n"
+                                    + "    .verification-code {\n"
+                                    + "      display: inline-block;\n"
+                                    + "      font-size: 24px;\n"
+                                    + "      color: #ff3333;\n"
+                                    + "      background-color: #f4f4f4;\n"
+                                    + "      padding: 10px 20px;\n"
+                                    + "      border-radius: 5px;\n"
+                                    + "      letter-spacing: 2px;\n"
+                                    + "      margin: 20px 0;\n"
+                                    + "    }\n"
+                                    + "    .email-footer {\n"
+                                    + "      text-align: center;\n"
+                                    + "      font-size: 14px;\n"
+                                    + "      color: #777777;\n"
+                                    + "      padding: 20px 0;\n"
+                                    + "      border-top: 1px solid #eeeeee;\n"
+                                    + "      border-left: 2px solid #ff3333;\n"
+                                    + "      border-right: 2px solid #ff3333;\n"
+                                    + "      border-bottom: 2px solid #ff3333;\n"
+                                    + "      border-bottom-left-radius: 10px;\n"
+                                    + "      border-bottom-right-radius: 10px;\n"
+                                    + "    }\n"
+                                    + "    .email-footer a {\n"
+                                    + "      color: #ff3333;\n"
+                                    + "      text-decoration: none;\n"
+                                    + "    }\n"
+                                    + "  </style>\n"
+                                    + "</head>\n"
+                                    + "<body>\n"
+                                    + "  <div class=\"email-container\">\n"
+                                    + "    <div class=\"email-header\">\n"
+                                    + "      <h1>Verification Code</h1>\n"
+                                    + "    </div>\n"
+                                    + "    <div class=\"email-body\">\n"
+                                    + "      <p>Hello User,</p>\n"
+                                    + "      <p>\n"
+                                    + "        Thank you for registering with us. Please use the following verification\n"
+                                    + "        code to complete your registration process:\n"
+                                    + "      </p>\n"
+                                    + "      <div class=\"verification-code\">" + otp + "</div>\n"
+                                    + "      <p>If you did not request this, please ignore this email.</p>\n"
+                                    + "    </div>\n"
+                                    + "    <div class=\"email-footer\">\n"
+                                    + "      <p>Best regards,</p>\n"
+                                    + "      <p>The Limupa Team</p>\n"
+                                    + "      <p><a href=\"#\">Contact Support</a></p>\n"
+                                    + "    </div>\n"
+                                    + "  </div>\n"
+                                    + "</body>";
+                            Mail.sendMail(email, "Verify Your Account - Limupa", content);
+                        }
+                    };
+                    mailSender.start();
 
-                session.save(user);
-                session.beginTransaction().commit();
+                    session.save(user);
+                    session.beginTransaction().commit();
 
-                req.getSession().setAttribute("email", email);
-                responseDTO.setOk(true);
-            } else {
-                responseDTO.setMsg("Email address already exists!");
+                    req.getSession().setAttribute("email", email);
+                    responseDTO.setOk(true);
+                } else {
+                    responseDTO.setMsg("Email address already exists!");
+                }
+            } catch (HibernateException e) {
+                System.out.println(e.getMessage());
+                responseDTO.setMsg("unable to process request");
             }
-
             session.close();
         }
 
