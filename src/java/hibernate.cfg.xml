@@ -19,5 +19,8 @@
         <mapping class="entity.Address"/>
         <mapping class="entity.City"/>
         <mapping class="entity.Watchlist"/>
+        <mapping class="entity.Orders"/>
+        <mapping class="entity.OrderItem"/>
+        <mapping class="entity.OrderStatus"/>
     </session-factory>
 </hibernate-configuration>
