@@ -23,6 +23,7 @@ const loadData = async() => {
             loadSelectOptions("model-select", modelList, ["id", "name", "status"]);
             loadSelectOptions("color-select", colorList, ["id", "name"]);
             loadSelectOptions("condition-select", conditionList, ["id", "name"]);
+            loadAddress();
         } else {
             console.error("Network error:", response.statusText);
         }
@@ -45,6 +46,36 @@ const loadSelectOptions = (selectTagId, list, propertyArray) => {
         optionTag.innerHTML = item[propertyArray[1]];
         selectTag.appendChild(optionTag);    
     });
+};
+
+const loadAddress = async() => {
+    try {
+        const response = await fetch("LoadAddress");
+        if (response.ok) {
+            const data = await response.json();
+            let addressHtml = document.getElementById("address-view");
+            document.getElementById("address-view-main").innerHTML = "";
+            data.addressList.forEach(address => {
+                let addressCloneHtml = addressHtml.cloneNode(true);
+                addressCloneHtml.querySelector("#is-used").checked = address.status === 1 ? true : false;
+                addressCloneHtml.querySelector("#added-name").innerHTML = address.user.f_name + " " + address.user.l_name;
+                addressCloneHtml.querySelector("#added-address").innerHTML = address.line_1 + ", " + address.line_2 + ", " + address.city.name + " - " + address.postal_code;
+                addressCloneHtml.querySelector("#added-mobile").innerHTML = address.mobile;
+                document.getElementById("address-view-main").appendChild(addressCloneHtml);
+            });
+            const selectTag = document.getElementById("city-select");
+            data.cityList.forEach(item => {
+                let optionTag = document.createElement("option");
+                optionTag.value = item.id;
+                optionTag.innerHTML = item.name;
+                selectTag.appendChild(optionTag);    
+            });
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
 };
 
 const updateAccount = async() => {
@@ -259,7 +290,6 @@ const addProduct = async() => {
                     body: form
                 }
         );
-
         if (response.ok) {
             const data = await response.json();
 
@@ -286,6 +316,61 @@ const addProduct = async() => {
                 document.getElementById("image-2-view").src = "images/addImage.png";
                 image_3.value = null;
                 document.getElementById("image-3-view").src = "images/addImage.png";
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+const addAddress = async() => {
+    const line_1 = document.getElementById("line_1");
+    const line_2 = document.getElementById("line_2");
+    const city = document.getElementById("city-select");
+    const postal_code = document.getElementById("postal_code");
+    const mobile = document.getElementById("mobile");
+
+    const reqObject = {
+        line_1: line_1.value,
+        line_2: line_2.value,
+        city: city.value,
+        postal_code: postal_code.value,
+        mobile: mobile.value
+    };
+    try {
+        const response = await fetch(
+                "AddAddress",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reqObject)
+                }
+        );
+        if (response.ok) {
+            const data = await response.json();
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Shipping address changed!",
+                    icon: "success"
+                });
+
+                line_1.value = "";
+                line_2.value = "";
+                city.value = 0;
+                postal_code.value = "";
+                mobile.value = "";
+                loadAddress();
             } else {
                 Swal.fire({
                     title: "Warning",

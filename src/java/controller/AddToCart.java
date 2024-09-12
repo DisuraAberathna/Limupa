@@ -63,36 +63,41 @@ public class AddToCart extends HttpServlet {
                         if (req.getSession().getAttribute("user") != null) {
                             UserDTO userDTO = (UserDTO) req.getSession().getAttribute("user");
 
-                            Criteria userCriteria = session.createCriteria(User.class);
-                            userCriteria.add(Restrictions.eq("id", userDTO.getId()));
-                            User user = (User) userCriteria.uniqueResult();
+                            if (product.getUser().getId() != userDTO.getId()) {
+                                Criteria userCriteria = session.createCriteria(User.class);
+                                userCriteria.add(Restrictions.eq("id", userDTO.getId()));
+                                User user = (User) userCriteria.uniqueResult();
 
-                            Criteria cartCriteria = session.createCriteria(Cart.class);
-                            cartCriteria.add(Restrictions.eq("user", user));
-                            cartCriteria.add(Restrictions.eq("product", product));
+                                Criteria cartCriteria = session.createCriteria(Cart.class);
+                                cartCriteria.add(Restrictions.eq("user", user));
+                                cartCriteria.add(Restrictions.eq("product", product));
 
-                            if (cartCriteria.list().isEmpty()) {
-                                if (productQty <= product.getQty()) {
-                                    Cart cart = new Cart();
-                                    cart.setProduct(product);
-                                    cart.setQty(productQty);
-                                    cart.setUser(user);
+                                if (cartCriteria.list().isEmpty()) {
+                                    if (productQty <= product.getQty()) {
+                                        Cart cart = new Cart();
+                                        cart.setProduct(product);
+                                        cart.setQty(productQty);
+                                        cart.setUser(user);
 
-                                    session.save(cart);
-                                    transaction.commit();
+                                        session.save(cart);
+                                        transaction.commit();
 
-                                    responseDTO.setOk(true);
+                                        responseDTO.setOk(true);
+                                    } else {
+                                        responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
+                                    }
                                 } else {
-                                    responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
+                                    Cart cartItem = (Cart) cartCriteria.uniqueResult();
+                                    if ((cartItem.getQty() + productQty) <= product.getQty()) {
+                                        cartItem.setQty(cartItem.getQty() + productQty);
+                                        transaction.commit();
+                                        responseDTO.setOk(true);
+                                    } else {
+                                        responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
+                                    }
                                 }
                             } else {
-                                Cart cartItem = (Cart) cartCriteria.uniqueResult();
-                                if ((cartItem.getQty() + productQty) <= product.getQty()) {
-                                    cartItem.setQty(cartItem.getQty() + productQty);
-                                    transaction.commit();
-                                } else {
-                                    responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
-                                }
+                                responseDTO.setMsg("It's a your product! can't add to cart.");
                             }
                         } else {
                             HttpSession httpSession = req.getSession();

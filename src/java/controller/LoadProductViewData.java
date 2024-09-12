@@ -20,6 +20,7 @@ import model.Validate;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -49,9 +50,10 @@ public class LoadProductViewData extends HttpServlet {
 
                 Criteria productCriteria = session.createCriteria(Product.class);
                 productCriteria.add(Restrictions.in("model", modelList));
+                productCriteria.add(Restrictions.eq("status", 1));
                 productCriteria.add(Restrictions.ne("id", product.getId()));
+                productCriteria.addOrder(Order.asc("id"));
                 productCriteria.setMaxResults(6);
-
                 List<Product> productList = productCriteria.list();
 
                 for (Product product1 : productList) {
@@ -64,13 +66,13 @@ public class LoadProductViewData extends HttpServlet {
                 jsonObject.add("product", gson.toJsonTree(product));
                 jsonObject.add("productList", gson.toJsonTree(productList));
 
+                session.close();
+
                 resp.setContentType("application/json");
                 resp.getWriter().write(gson.toJson(jsonObject));
-            } 
+            }
         } catch (IOException | NumberFormatException | HibernateException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
 }

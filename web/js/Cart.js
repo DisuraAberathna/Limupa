@@ -15,11 +15,13 @@ const loadData = async() => {
 
                 let totalQty = 0;
                 let total = 0;
+                let totalShipping = 0;
 
                 data.forEach(item => {
-                    const itemSubTotal = item.product.price * item.qty + item.product.shipping;
+                    const itemSubTotal = item.product.price * item.qty;
                     totalQty += item.qty;
-                    total += itemSubTotal;
+                    totalShipping += item.product.shipping * item.qty;
+                    total += itemSubTotal + totalShipping;
 
                     const cartItemRowClone = cartItemRow.cloneNode(true);
                     cartItemRowClone.querySelector("#cart-item-remove")
@@ -40,7 +42,7 @@ const loadData = async() => {
                                         minimumFractionDigits: 2
                                     }
 
-                            ).format(item.product.price + item.product.shipping);
+                            ).format(item.product.price);
 
                     cartItemRowClone.querySelector("#cart-item-qty").value = item.qty;
                     cartItemRowClone.querySelector("#cart-item-subtotal").innerHTML = "LKR " +
@@ -58,6 +60,14 @@ const loadData = async() => {
                 document.getElementById("cart-form").classList.remove("d-none");
 
                 document.getElementById("cart-total-qty").innerHTML = totalQty;
+                document.getElementById("cart-total-shipping").innerHTML = "LKR " +
+                        new Intl.NumberFormat(
+                                "en-US",
+                                {
+                                    minimumFractionDigits: 2
+                                }
+
+                        ).format((totalShipping));
                 document.getElementById("cart-total").innerHTML = "LKR " +
                         new Intl.NumberFormat(
                                 "en-US",
