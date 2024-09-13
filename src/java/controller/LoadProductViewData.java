@@ -29,50 +29,61 @@ import org.hibernate.criterion.Restrictions;
  */
 @WebServlet(name = "LoadProductViewData", urlPatterns = {"/LoadProductViewData"})
 public class LoadProductViewData extends HttpServlet {
-
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
         Session session = HibernateUtil.getSessionFactory().openSession();
-
+        JsonObject jsonObject = new JsonObject();
+        
         try {
             String productID = req.getParameter("id");
-
+            
             if (Validate.isInteger(productID)) {
-                Product product = (Product) session.get(Product.class, Integer.valueOf(productID));
-                product.getUser().setPassword(null);
-                product.getUser().setVerification(null);
-                product.getUser().setEmail(null);
-
-                Criteria modelCriteria = session.createCriteria(Model.class);
-                modelCriteria.add(Restrictions.eq("brand", product.getModel().getBrand()));
-                List<Model> modelList = modelCriteria.list();
-
                 Criteria productCriteria = session.createCriteria(Product.class);
-                productCriteria.add(Restrictions.in("model", modelList));
+                productCriteria.add(Restrictions.eq("id", Integer.valueOf(productID)));
                 productCriteria.add(Restrictions.eq("status", 1));
-                productCriteria.add(Restrictions.ne("id", product.getId()));
-                productCriteria.addOrder(Order.asc("id"));
-                productCriteria.setMaxResults(6);
-                List<Product> productList = productCriteria.list();
-
-                for (Product p : productList) {
-                    p.getUser().setPassword(null);
-                    p.getUser().setVerification(null);
-                    p.getUser().setEmail(null);
+                
+                Product product = (Product) productCriteria.list().get(0);
+                
+                if (product != null) {
+                    product.getUser().setPassword(null);
+                    product.getUser().setVerification(null);
+                    product.getUser().setEmail(null);
+                    
+                    Criteria modelCriteria = session.createCriteria(Model.class);
+                    modelCriteria.add(Restrictions.eq("brand", product.getModel().getBrand()));
+                    List<Model> modelList = modelCriteria.list();
+                    
+                    Criteria similerProductCriteria = session.createCriteria(Product.class);
+                    similerProductCriteria.add(Restrictions.in("model", modelList));
+                    similerProductCriteria.add(Restrictions.eq("status", 1));
+                    similerProductCriteria.add(Restrictions.ne("id", Integer.valueOf(productID)));
+                    similerProductCriteria.addOrder(Order.asc("id"));
+                    similerProductCriteria.setMaxResults(10);
+                    List<Product> productList = similerProductCriteria.list();
+                    
+                    for (Product p : productList) {
+                        p.getUser().setPassword(null);
+                        p.getUser().setVerification(null);
+                        p.getUser().setEmail(null);
+                    }
+                    
+                    jsonObject.add("product", gson.toJsonTree(product));
+                    jsonObject.add("productList", gson.toJsonTree(productList));
+                    
+                    session.close();
+                } else {
+                    jsonObject.addProperty("error", "No product");
                 }
-
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.add("product", gson.toJsonTree(product));
-                jsonObject.add("productList", gson.toJsonTree(productList));
-
-                session.close();
-
-                resp.setContentType("application/json");
-                resp.getWriter().write(gson.toJson(jsonObject));
+            } else {
+                jsonObject.addProperty("error", "No product");
             }
-        } catch (IOException | NumberFormatException | HibernateException e) {
+        } catch (NumberFormatException | HibernateException e) {
             System.out.println(e.getMessage());
         }
+        
+        resp.setContentType("application/json");
+        resp.getWriter().write(gson.toJson(jsonObject));
     }
 }

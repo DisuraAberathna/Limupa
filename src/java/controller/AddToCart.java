@@ -60,94 +60,98 @@ public class AddToCart extends HttpServlet {
                     Product product = (Product) session.get(Product.class, productId);
 
                     if (product != null) {
-                        if (req.getSession().getAttribute("user") != null) {
-                            UserDTO userDTO = (UserDTO) req.getSession().getAttribute("user");
+                        if (product.getQty() > 0) {
+                            if (req.getSession().getAttribute("user") != null) {
+                                UserDTO userDTO = (UserDTO) req.getSession().getAttribute("user");
 
-                            if (product.getUser().getId() != userDTO.getId()) {
-                                Criteria userCriteria = session.createCriteria(User.class);
-                                userCriteria.add(Restrictions.eq("id", userDTO.getId()));
-                                User user = (User) userCriteria.uniqueResult();
+                                if (product.getUser().getId() != userDTO.getId()) {
+                                    Criteria userCriteria = session.createCriteria(User.class);
+                                    userCriteria.add(Restrictions.eq("id", userDTO.getId()));
+                                    User user = (User) userCriteria.uniqueResult();
 
-                                Criteria cartCriteria = session.createCriteria(Cart.class);
-                                cartCriteria.add(Restrictions.eq("user", user));
-                                cartCriteria.add(Restrictions.eq("product", product));
+                                    Criteria cartCriteria = session.createCriteria(Cart.class);
+                                    cartCriteria.add(Restrictions.eq("user", user));
+                                    cartCriteria.add(Restrictions.eq("product", product));
 
-                                if (cartCriteria.list().isEmpty()) {
-                                    if (productQty <= product.getQty()) {
-                                        Cart cart = new Cart();
-                                        cart.setProduct(product);
-                                        cart.setQty(productQty);
-                                        cart.setUser(user);
+                                    if (cartCriteria.list().isEmpty()) {
+                                        if (productQty <= product.getQty()) {
+                                            Cart cart = new Cart();
+                                            cart.setProduct(product);
+                                            cart.setQty(productQty);
+                                            cart.setUser(user);
 
-                                        session.save(cart);
-                                        transaction.commit();
+                                            session.save(cart);
+                                            transaction.commit();
 
-                                        responseDTO.setOk(true);
+                                            responseDTO.setOk(true);
+                                        } else {
+                                            responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
+                                        }
                                     } else {
-                                        responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
+                                        Cart cartItem = (Cart) cartCriteria.uniqueResult();
+                                        if ((cartItem.getQty() + productQty) <= product.getQty()) {
+                                            cartItem.setQty(cartItem.getQty() + productQty);
+                                            transaction.commit();
+                                            responseDTO.setOk(true);
+                                        } else {
+                                            responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
+                                        }
                                     }
                                 } else {
-                                    Cart cartItem = (Cart) cartCriteria.uniqueResult();
-                                    if ((cartItem.getQty() + productQty) <= product.getQty()) {
-                                        cartItem.setQty(cartItem.getQty() + productQty);
-                                        transaction.commit();
-                                        responseDTO.setOk(true);
-                                    } else {
-                                        responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
-                                    }
+                                    responseDTO.setMsg("It's a your product! can't add to cart.");
                                 }
                             } else {
-                                responseDTO.setMsg("It's a your product! can't add to cart.");
-                            }
-                        } else {
-                            HttpSession httpSession = req.getSession();
+                                HttpSession httpSession = req.getSession();
 
-                            if (httpSession.getAttribute("sessionCart") != null) {
-                                ArrayList<CartDTO> sessionCart = (ArrayList<CartDTO>) httpSession.getAttribute("sessionCart");
+                                if (httpSession.getAttribute("sessionCart") != null) {
+                                    ArrayList<CartDTO> sessionCart = (ArrayList<CartDTO>) httpSession.getAttribute("sessionCart");
 
-                                CartDTO foundCartDTO = null;
+                                    CartDTO foundCartDTO = null;
 
-                                for (CartDTO cartDTO : sessionCart) {
-                                    if (cartDTO.getProduct().getId() == product.getId()) {
-                                        foundCartDTO = cartDTO;
-                                        break;
+                                    for (CartDTO cartDTO : sessionCart) {
+                                        if (cartDTO.getProduct().getId() == product.getId()) {
+                                            foundCartDTO = cartDTO;
+                                            break;
+                                        }
                                     }
-                                }
-                                if (foundCartDTO != null) {
-                                    if ((foundCartDTO.getQty() + productQty) <= product.getQty()) {
-                                        foundCartDTO.setQty(foundCartDTO.getQty() + productQty);
-                                        responseDTO.setOk(true);
+                                    if (foundCartDTO != null) {
+                                        if ((foundCartDTO.getQty() + productQty) <= product.getQty()) {
+                                            foundCartDTO.setQty(foundCartDTO.getQty() + productQty);
+                                            responseDTO.setOk(true);
+                                        } else {
+                                            responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
+                                        }
                                     } else {
-                                        responseDTO.setMsg("Can't update your cart! Quantity is unavailable.");
+                                        if (productQty <= product.getQty()) {
+                                            CartDTO cartDTO = new CartDTO();
+                                            cartDTO.setProduct(product);
+                                            cartDTO.setQty(productQty);
+                                            sessionCart.add(cartDTO);
+
+                                            responseDTO.setOk(true);
+                                        } else {
+                                            responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
+                                        }
                                     }
                                 } else {
                                     if (productQty <= product.getQty()) {
+                                        ArrayList<CartDTO> sessionCart = new ArrayList<>();
+
                                         CartDTO cartDTO = new CartDTO();
                                         cartDTO.setProduct(product);
                                         cartDTO.setQty(productQty);
                                         sessionCart.add(cartDTO);
 
+                                        httpSession.setAttribute("sessionCart", sessionCart);
+
                                         responseDTO.setOk(true);
                                     } else {
                                         responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
                                     }
                                 }
-                            } else {
-                                if (productQty <= product.getQty()) {
-                                    ArrayList<CartDTO> sessionCart = new ArrayList<>();
-
-                                    CartDTO cartDTO = new CartDTO();
-                                    cartDTO.setProduct(product);
-                                    cartDTO.setQty(productQty);
-                                    sessionCart.add(cartDTO);
-
-                                    httpSession.setAttribute("sessionCart", sessionCart);
-
-                                    responseDTO.setOk(true);
-                                } else {
-                                    responseDTO.setMsg("Quantity can't be greater than " + product.getQty());
-                                }
                             }
+                        } else {
+                            responseDTO.setMsg("Out of stock product!");
                         }
                     } else {
                         responseDTO.setMsg("Product not found!");

@@ -216,11 +216,11 @@ const sendMail = async(id) => {
                     window.location.href = "index.html";
                 }, 3000);
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
             }
         } else {
             console.error("Network error:", response.statusText);
