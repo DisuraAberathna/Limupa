@@ -5,7 +5,6 @@
 package controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import entity.Brand;
 import entity.Category;
@@ -39,28 +38,17 @@ public class LoadSearchData extends HttpServlet {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
         try {
+            JsonObject jsonObject = new JsonObject();
+
             Criteria categoryCriteria = session.createCriteria(Category.class);
             categoryCriteria.add(Restrictions.eq("status", 1));
+            categoryCriteria.addOrder(Order.asc("name"));
             List<Category> categoryList = categoryCriteria.list();
 
-            JsonObject jsonObject = new JsonObject();
-            JsonArray categoryArray = new JsonArray();
-
-            for (Category category : categoryList) {
-                JsonObject categoryJson = new JsonObject();
-                categoryJson.addProperty("id", category.getId());
-                categoryJson.addProperty("name", category.getName());
-
-                Criteria brandCriteria = session.createCriteria(Brand.class);
-                brandCriteria.add(Restrictions.eq("category", category));
-                brandCriteria.add(Restrictions.eq("status", 1));
-                brandCriteria.addOrder(Order.asc("name"));
-
-                List<Brand> brandList = brandCriteria.list();
-                categoryJson.add("brandList", gson.toJsonTree(brandList));
-
-                categoryArray.add(categoryJson);
-            }
+            Criteria brandCriteria = session.createCriteria(Brand.class);
+            brandCriteria.add(Restrictions.eq("status", 1));
+            brandCriteria.addOrder(Order.asc("name"));
+            List<Brand> brandList = brandCriteria.list();
 
             Criteria colorCriteria = session.createCriteria(Color.class);
             colorCriteria.addOrder(Order.asc("name"));
@@ -83,7 +71,8 @@ public class LoadSearchData extends HttpServlet {
                 product.setUser(null);
             }
 
-            jsonObject.add("categoryList", categoryArray);
+            jsonObject.add("categoryList", gson.toJsonTree(categoryList));
+            jsonObject.add("brandList", gson.toJsonTree(brandList));
             jsonObject.add("colorList", gson.toJsonTree(colorList));
             jsonObject.add("conditionList", gson.toJsonTree(conditionList));
             jsonObject.add("productList", gson.toJsonTree(productList));
