@@ -5,12 +5,10 @@
 package controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dto.ResponseDTO;
 import dto.UserDTO;
 import entity.Address;
-import entity.Brand;
 import entity.City;
 import entity.User;
 import java.io.IOException;
