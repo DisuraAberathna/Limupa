@@ -32,7 +32,10 @@ const loadProduct = async() => {
                                         minimumFractionDigits: 2
                                     }
                             ).format(product.price);
-                    productCloneHtml.querySelector("#product-qty").innerHTML = product.qty + " Items Left";
+                    productCloneHtml.querySelector("#product-qty").innerHTML = product.qty > 0 ? product.qty + ' Items Left' : 'Out of Stock';
+                    productCloneHtml.querySelector("#product-qty").style.color = product.qty < 1 && 'Red';
+                    productCloneHtml.querySelector("#product-add-to-cart").disabled = product.qty > 0 ? false : true;
+                    productCloneHtml.querySelector("#product-add-to-cart").style.opacity = product.qty > 0 ? '1' : '0.5';
                     productCloneHtml.querySelector("#product-add-to-cart")
                             .addEventListener(
                                     "click",

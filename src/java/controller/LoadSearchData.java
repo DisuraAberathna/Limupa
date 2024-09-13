@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import entity.Brand;
 import entity.Category;
 import entity.Color;
+import entity.Product;
 import entity.ProductCondition;
 import java.io.IOException;
 import java.util.List;
@@ -69,9 +70,23 @@ public class LoadSearchData extends HttpServlet {
             conditionCriteria.addOrder(Order.asc("name"));
             List<ProductCondition> conditionList = conditionCriteria.list();
 
+            Criteria productCriteria = session.createCriteria(Product.class);
+            productCriteria.add(Restrictions.eq("status", 1));
+            productCriteria.addOrder(Order.desc("id"));
+            jsonObject.addProperty("allProductCount", productCriteria.list().size());
+            productCriteria.setFirstResult(0);
+            productCriteria.setMaxResults(9);
+
+            List<Product> productList = productCriteria.list();
+
+            for (Product product : productList) {
+                product.setUser(null);
+            }
+
             jsonObject.add("categoryList", categoryArray);
             jsonObject.add("colorList", gson.toJsonTree(colorList));
             jsonObject.add("conditionList", gson.toJsonTree(conditionList));
+            jsonObject.add("productList", gson.toJsonTree(productList));
 
             session.close();
 

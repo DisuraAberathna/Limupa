@@ -1329,7 +1329,6 @@ textarea:focus {
 
 .product-details-view-content .product-info h1 {
     letter-spacing: -.025em;
-    line-height: 24px;
     color: #0363cd;
     text-transform: capitalize;
     font-weight: 500;
@@ -6703,8 +6702,8 @@ span.required {
 }
 
 .radio {
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
 }
 
 .search-input {
@@ -6747,7 +6746,7 @@ span.required {
     background: #e02424;
 }
 
-.search-div{
+.search-div {
     text-align: end;
     border-bottom: 1px solid #e4e4e4;
 }
@@ -6770,9 +6769,9 @@ span.required {
 
 .amount-range {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: medium none;
+    border: none;
     color: #666;
-    font-size: 15px;
+    font-size: 13px;
     margin-top: 10px;
     padding: 5px 0
 }
@@ -6780,11 +6779,9 @@ span.required {
 .amount-range,
 .price-button {
     width: 100%;
-    word-spacing: 10px;
     padding: 0;
+    font-size: 13px;
     font-weight: 500;
-    font-size: 16px;
-    line-height: 1;
     margin-top: 0;
 }
 
@@ -6792,3 +6789,33 @@ span.required {
     padding-right: 3px
 }
 
+.category {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.brands-list {
+    display: none;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.category-toggle-icon {
+    margin-right: 10px;
+}
+
+.brand-item {
+    transition-duration: 500ms;
+    font-weight: 450;
+}
+
+.brand-item:hover {
+    color: #000;
+    transition-duration: 500ms;
+}
