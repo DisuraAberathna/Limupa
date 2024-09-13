@@ -5668,7 +5668,7 @@ span.required {
 /* 6.11 Li's Shop Page
 /*----------------------------------------*/
 .sidebar-categores-box {
-    background: #f4f4f4;
+    background: #fff;
     border: 1px solid #e1e1e1;
     border-radius: 3px;
     box-shadow: none;
@@ -5703,7 +5703,7 @@ span.required {
     padding: 5px;
     -webkit-transition: all 0.3s ease-in-out 0s;
     transition: all 0.3s ease-in-out 0s;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .btn-clear-all::before {
@@ -5848,6 +5848,7 @@ span.required {
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
+    align-items: center;
 }
 
 .shop-bar-inner {
@@ -5862,7 +5863,7 @@ span.required {
         margin-bottom: 10px;
     }
 
-    .product-short .nice-select {
+    .product-short select {
         margin-bottom: 5px;
     }
 }
@@ -5893,6 +5894,7 @@ span.required {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
 }
 
 .product-short>p {
@@ -6696,6 +6698,97 @@ span.required {
     background: #ffffff;
 }
 
-.cart-img{
+.cart-img {
     width: 150px;
 }
+
+.radio {
+    width: 15px;
+    height: 15px;
+}
+
+.search-input {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #999999;
+    border-radius: 0;
+    line-height: 23px;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #7a7a7a;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.search-input:active,
+.search-input:focus {
+    border: 1px solid #999999;
+}
+
+.search-button {
+    display: block;
+    width: 100%;
+    border-radius: 2px;
+    height: 40px;
+    border: none;
+    line-height: 24px;
+    padding: 6px 20px;
+    float: left;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #363f4d;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background: #e02424;
+}
+
+.search-div{
+    text-align: end;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.product-short select {
+    border-radius: 0;
+    color: #242424;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    width: 320px;
+    z-index: 999;
+}
+
+@media only screen and (max-width: 767px) {
+    .product-short select {
+        width: 180px;
+    }
+}
+
+.amount-range {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    color: #666;
+    font-size: 15px;
+    margin-top: 10px;
+    padding: 5px 0
+}
+
+.amount-range,
+.price-button {
+    width: 100%;
+    word-spacing: 10px;
+    padding: 0;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1;
+    margin-top: 0;
+}
+
+.input-range {
+    padding-right: 3px
+}
+
