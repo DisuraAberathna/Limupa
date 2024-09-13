@@ -229,11 +229,12 @@
                                     <div class="product-short">
                                         <p>Sort By:</p>
                                         <select id="sort-select">
-                                            <option value="0">Relevance</option>
-                                            <option value="1">Name (A - Z)</option>
-                                            <option value="2">Name (Z - A)</option>
-                                            <option value="3">Price (Low &gt; High)</option>
-                                            <option value="4">Price (High &gt; Low)</option>
+                                            <option value="0">Sort by Latest</option>
+                                            <option value="1">Sort by Oldest</option>
+                                            <option value="2">Name (A - Z)</option>
+                                            <option value="3">Name (Z - A)</option>
+                                            <option value="4">Price (Low &gt; High)</option>
+                                            <option value="5">Price (High &gt; Low)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -294,9 +295,6 @@
                                     <div class="col-lg-6 col-md-6">
                                         <ul class="pagination-box pt-xs-20 pb-xs-15" id="pagination">
                                             <li id="pagination-item"><a href="#" id="pagination-item-text">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-
                                         </ul>
                                     </div>
                                 </div>
@@ -309,30 +307,24 @@
                                 <div class="sidebar-title">
                                     <h2>Filter By</h2>
                                 </div>
-                                <div class="search-div pb-15">
-                                    <input type="text" class="search-input" id="search-input"/>
-                                    <button type="button" class="search-button">Search</button>
-                                    <!-- btn-clear-all start -->
-                                    <button type="button" class="btn-clear-all mb-sm-30 mb-xs-30" onclick="clearSearch();">
-                                        Clear all
-                                    </button>
-                                    <!-- btn-clear-all end -->
-                                </div>
                                 <!-- category-sub-menu start -->
-                                <div class="filter-sub-area pt-10">
-                                    <h5 class="category">Brand List</h5>
-                                    <ul id="category-section-main" class="pl-15"></ul>
+                                <div class="filter-sub-area">
+                                    <h5 class="category">Category</h5>
+                                    <select id="category-select" onchange="updateBrands();">
+                                        <option value="0">Select</option>
+                                    </select>
                                 </div>
                                 <div class="filter-sub-area">
-                                    <h5 class="cursor-pointer">
-                                        <a class="d-flex justify-content-between align-items-center" onclick="toggleColor()">
-                                            <span>Colour</span>
-                                            <span id="color-toggle-icon" class="category-toggle-icon">-</span>
-                                        </a>
-                                    </h5>
-                                    <div class="color-categoriy">
-                                        <ul id="color-section-main" class="pl-15"></ul>
-                                    </div>
+                                    <h5 class="category">Brand</h5>
+                                    <select id="brand-select">
+                                        <option value="0">Select</option>
+                                    </select>
+                                </div>
+                                <div class="filter-sub-area">
+                                    <h5 class="category">Colour</h5>
+                                    <select id="color-select">
+                                        <option value="0">Select</option>
+                                    </select>
                                 </div>
                                 <div class="filter-sub-area">
                                     <h5>Condition</h5>
@@ -351,7 +343,14 @@
                                         </form>
                                     </div>
                                 </div>
-
+                                <div class="search-div pt-15">
+                                    <button type="button" class="search-button" onclick="searchProduct(0);">Search</button>
+                                    <!-- btn-clear-all start -->
+                                    <button type="button" class="btn-clear-all mb-sm-30 mb-xs-30" onclick="clearSearch();">
+                                        Clear all
+                                    </button>
+                                    <!-- btn-clear-all end -->
+                                </div>
                                 <!-- category-sub-menu end -->
                             </div>
                             <!--sidebar-categores-box end  -->
@@ -909,6 +908,8 @@
         <script src="js/lib/scrollUp.min.js"></script>
         <!-- Main/Activator js -->
         <script src="js/lib/main.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script src="js/Script.js"></script>
         <script src="js/Shop.js"></script>

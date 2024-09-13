@@ -32,82 +32,146 @@ import org.hibernate.criterion.Restrictions;
 public class SearchProduct extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ok", false);
 
+        // Open a Hibernate session
         Session session = HibernateUtil.getSessionFactory().openSession();
         JsonObject requestJsonObject = gson.fromJson(req.getReader(), JsonObject.class);
 
+        // Create a Criteria for the Product entity
         Criteria criteria = session.createCriteria(Product.class);
+        criteria.add(Restrictions.eq("status", 1)); // Active products only
 
-        if (requestJsonObject.has("category_name")) {
-            String category_name = requestJsonObject.get("category_name").getAsString();
+        // Category filter
+        if (requestJsonObject.has("category") && !requestJsonObject.get("category").getAsString().equals("0")) {
+            int categoryId = requestJsonObject.get("category").getAsInt();
+
+            // Fetch category entity
             Criteria categoryCriteria = session.createCriteria(Category.class);
-            categoryCriteria.add(Restrictions.eq("name", category_name));
+            categoryCriteria.add(Restrictions.eq("id", categoryId));
             Category category = (Category) categoryCriteria.uniqueResult();
 
-            Criteria criteria3 = session.createCriteria(Model.class);
-            criteria3.add(Restrictions.eq("category", category));
-            List<Model> modelList = criteria3.list();
+            if (category != null) {
+                // Brand filter
+                if (requestJsonObject.has("brand") && !requestJsonObject.get("brand").getAsString().equals("0")) {
+                    int brandId = requestJsonObject.get("brand").getAsInt();
 
-            criteria.add(Restrictions.in("model", modelList));
+                    // Fetch models for the specified brand and category
+                    Criteria modelCriteria = session.createCriteria(Model.class, "model")
+                            .createAlias("model.brand", "brand") // Join Model with Brand
+                            .createAlias("brand.category", "category") // Join Brand with Category
+                            .add(Restrictions.eq("brand.id", brandId)) // Filter by brand ID
+                            .add(Restrictions.eq("category.id", categoryId));  // Filter by category ID
+
+                    List<Model> brandModelList = modelCriteria.list();
+                    if (!brandModelList.isEmpty()) {
+                        criteria.add(Restrictions.in("model", brandModelList));  // Filter products by these models
+                    }
+
+                } else {
+                    // No brand specified, filter by models within the category only
+                    Criteria modelCriteria = session.createCriteria(Model.class, "model")
+                            .createAlias("model.brand", "brand")
+                            .createAlias("brand.category", "category")
+                            .add(Restrictions.eq("category.id", categoryId));  // Filter by category ID
+
+                    List<Model> modelList = modelCriteria.list();
+                    if (!modelList.isEmpty()) {
+                        criteria.add(Restrictions.in("model", modelList));  // Filter products by these models
+                    }
+                }
+            }
         }
 
-        if (requestJsonObject.has("condition_name")) {
-            String condition_name = requestJsonObject.get("condition_name").getAsString();
+        // Condition filter
+        if (requestJsonObject.has("condition")) {
+            String conditionName = requestJsonObject.get("condition").getAsString();
             Criteria conditionCriteria = session.createCriteria(ProductCondition.class);
-            conditionCriteria.add(Restrictions.eq("name", condition_name));
-            ProductCondition product_condition = (ProductCondition) conditionCriteria.uniqueResult();
+            conditionCriteria.add(Restrictions.eq("name", conditionName));
+            ProductCondition productCondition = (ProductCondition) conditionCriteria.uniqueResult();
 
-            criteria.add(Restrictions.eq("condition", product_condition));
+            if (productCondition != null) {
+                criteria.add(Restrictions.eq("productCondition", productCondition));
+            }
         }
 
-        if (requestJsonObject.has("color_name")) {
-            String color_name = requestJsonObject.get("color_name").getAsString();
+        // Color filter
+        if (requestJsonObject.has("color") && !requestJsonObject.get("color").getAsString().equals("0")) {
+            int colorId = requestJsonObject.get("color").getAsInt();
             Criteria colorCriteria = session.createCriteria(Color.class);
-            colorCriteria.add(Restrictions.eq("name", color_name));
+            colorCriteria.add(Restrictions.eq("id", colorId));
             Color color = (Color) colorCriteria.uniqueResult();
 
-            criteria.add(Restrictions.eq("color", color));
+            if (color != null) {
+                criteria.add(Restrictions.eq("color", color));
+            }
         }
 
-        Double price_range_start = requestJsonObject.get("price_range_start").getAsDouble();
-        Double price_range_end = requestJsonObject.get("price_range_end").getAsDouble();
+        // Price range filter
+        if (requestJsonObject.has("priceStart") && requestJsonObject.has("priceEnd")) {
+            Double priceStart = requestJsonObject.get("priceStart").getAsDouble();
+            Double priceEnd = requestJsonObject.get("priceEnd").getAsDouble();
 
-        criteria.add(Restrictions.ge("price", price_range_start));
-        criteria.add(Restrictions.le("price", price_range_end));
-
-        String sort_text = requestJsonObject.get("sort_text").getAsString();
-
-        if (sort_text.equals("Sort by Latest")) {
-            criteria.addOrder(Order.desc("id"));
-        } else if (sort_text.equals("Sort by Oldest")) {
-            criteria.addOrder(Order.asc("id"));
-        } else if (sort_text.equals("Sort by Name")) {
-            criteria.addOrder(Order.asc("title"));
-        } else if (sort_text.equals("Sort by Price")) {
-            criteria.addOrder(Order.asc("price"));
+            criteria.add(Restrictions.ge("price", priceStart));
+            criteria.add(Restrictions.le("price", priceEnd));
         }
 
+        // Sorting logic
+        if (requestJsonObject.has("sort")) {
+            String sort = requestJsonObject.get("sort").getAsString();
+            switch (sort) {
+                case "0":
+                    criteria.addOrder(Order.desc("id"));
+                    break;
+                case "1":
+                    criteria.addOrder(Order.asc("id"));
+                    break;
+                case "2":
+                    criteria.addOrder(Order.asc("title"));
+                    break;
+                case "3":
+                    criteria.addOrder(Order.desc("title"));
+                    break;
+                case "4":
+                    criteria.addOrder(Order.asc("price"));
+                    break;
+                case "5":
+                    criteria.addOrder(Order.desc("price"));
+                    break;
+            }
+        }
+
+        // Add product count to response
         jsonObject.addProperty("allProductCount", criteria.list().size());
 
-        int firstResult = requestJsonObject.get("firstResult").getAsInt();
-        criteria.setFirstResult(firstResult);
-        criteria.setMaxResults(9);
+        // Pagination
+        if (requestJsonObject.has("firstResult")) {
+            int firstResult = requestJsonObject.get("firstResult").getAsInt();
+            criteria.setFirstResult(firstResult);
+            criteria.setMaxResults(9);
+        }
 
+        // Execute the query and fetch the results
         List<Product> productList = criteria.list();
 
+        // Remove any sensitive or unnecessary references (e.g., user data)
         for (Product product : productList) {
             product.setUser(null);
         }
+
+        // Close the session
         session.close();
 
+        // Prepare the response
         jsonObject.addProperty("ok", true);
         jsonObject.add("productList", gson.toJsonTree(productList));
 
+        // Set response type and send the JSON response
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(jsonObject));
     }
+
 }
