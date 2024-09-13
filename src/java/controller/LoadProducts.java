@@ -54,7 +54,7 @@ public class LoadProducts extends HttpServlet {
                 productCriteria.createAlias("brand.category", "category");
                 productCriteria.add(Restrictions.eq("category.id", category.getId()));
                 productCriteria.add(Restrictions.eq("product.status", 1));
-                productCriteria.addOrder(Order.asc("id"));
+                productCriteria.addOrder(Order.desc("id"));
                 productCriteria.setMaxResults(10);
 
                 List<Product> productList = productCriteria.list();
@@ -62,8 +62,6 @@ public class LoadProducts extends HttpServlet {
 
                 categoryArray.add(categoryJson);
             }
-
-            // Add categories with products to the response JSON
             jsonObject.add("categoryList", categoryArray);
 
             session.close();
