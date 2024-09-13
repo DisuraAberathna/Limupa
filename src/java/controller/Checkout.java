@@ -67,7 +67,6 @@ public class Checkout extends HttpServlet {
             } else {
                 Address address = (Address) addressCriteria.list().get(0);
                 saveOrder(session, transaction, user, address, jsonObject);
-                jsonObject.addProperty("ok", true);
             }
         } else {
             jsonObject.addProperty("msg", "Invalid sign in! Please sign in again.");
@@ -78,7 +77,7 @@ public class Checkout extends HttpServlet {
         resp.getWriter().write(gson.toJson(jsonObject));
     }
 
-    private void saveOrder(Session session, Transaction transaction, User user, Address address, JsonObject responseJsonObject) {
+    private void saveOrder(Session session, Transaction transaction, User user, Address address, JsonObject jsonObject) {
         try {
             Orders order = new Orders();
             order.setAddress(address);
@@ -148,11 +147,10 @@ public class Checkout extends HttpServlet {
             String md5Hash = PayHere.generateMD5(merchnt_id + order_id + formatedAmount + currency + merchantSecretMd5Hash);
             payhere.addProperty("hash", md5Hash);
 
-            responseJsonObject.addProperty("success", true);
-            responseJsonObject.addProperty("message", "Checkout Complet");
+            jsonObject.addProperty("ok", true);
 
             Gson gson = new Gson();
-            responseJsonObject.add("payhereJson", gson.toJsonTree(payhere));
+            jsonObject.add("payhereJson", gson.toJsonTree(payhere));
         } catch (HibernateException e) {
             transaction.rollback();
         }
