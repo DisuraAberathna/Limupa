@@ -7,8 +7,10 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import entity.Brand;
 import entity.Category;
-import entity.Product;
+import entity.Color;
+import entity.ProductCondition;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -27,8 +29,8 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author SINGER
  */
-@WebServlet(name = "LoadProducts", urlPatterns = {"/LoadProducts"})
-public class LoadProducts extends HttpServlet {
+@WebServlet(name = "LoadSearchData", urlPatterns = {"/LoadSearchData"})
+public class LoadSearchData extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,21 +50,28 @@ public class LoadProducts extends HttpServlet {
                 categoryJson.addProperty("id", category.getId());
                 categoryJson.addProperty("name", category.getName());
 
-                Criteria productCriteria = session.createCriteria(Product.class, "product");
-                productCriteria.createAlias("product.model", "model");
-                productCriteria.createAlias("model.brand", "brand");
-                productCriteria.createAlias("brand.category", "category");
-                productCriteria.add(Restrictions.eq("category.id", category.getId()));
-                productCriteria.add(Restrictions.eq("product.status", 1));
-                productCriteria.addOrder(Order.desc("id"));
-                productCriteria.setMaxResults(10);
+                Criteria brandCriteria = session.createCriteria(Brand.class);
+                brandCriteria.add(Restrictions.eq("category", category));
+                brandCriteria.add(Restrictions.eq("status", 1));
+                brandCriteria.addOrder(Order.asc("name"));
 
-                List<Product> productList = productCriteria.list();
-                categoryJson.add("productList", gson.toJsonTree(productList));
+                List<Brand> brandList = brandCriteria.list();
+                categoryJson.add("brandList", gson.toJsonTree(brandList));
 
                 categoryArray.add(categoryJson);
             }
+
+            Criteria colorCriteria = session.createCriteria(Color.class);
+            colorCriteria.addOrder(Order.asc("name"));
+            List<Color> colorList = colorCriteria.list();
+
+            Criteria conditionCriteria = session.createCriteria(ProductCondition.class);
+            conditionCriteria.addOrder(Order.asc("name"));
+            List<ProductCondition> conditionList = conditionCriteria.list();
+
             jsonObject.add("categoryList", categoryArray);
+            jsonObject.add("colorList", gson.toJsonTree(colorList));
+            jsonObject.add("conditionList", gson.toJsonTree(conditionList));
 
             session.close();
 
