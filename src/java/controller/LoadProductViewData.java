@@ -56,10 +56,10 @@ public class LoadProductViewData extends HttpServlet {
                 productCriteria.setMaxResults(6);
                 List<Product> productList = productCriteria.list();
 
-                for (Product product1 : productList) {
-                    product1.getUser().setPassword(null);
-                    product1.getUser().setVerification(null);
-                    product1.getUser().setEmail(null);
+                for (Product p : productList) {
+                    p.getUser().setPassword(null);
+                    p.getUser().setVerification(null);
+                    p.getUser().setEmail(null);
                 }
 
                 JsonObject jsonObject = new JsonObject();
