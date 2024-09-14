@@ -105,6 +105,13 @@ const updateProductView = (data) => {
                     addToCart(product.id, 1);
                     e.preventDefault();
                 });
+        productCloneHtml.querySelector("#product-add-to-watchlist")
+                .addEventListener(
+                        "click",
+                        (e) => {
+                    addToWatchlist()(product.id);
+                    e.preventDefault();
+                });
         document.getElementById("product-main").appendChild(productCloneHtml);
     });
 
