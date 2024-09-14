@@ -52,6 +52,35 @@ public class LoadCart extends HttpServlet {
 
                 List<Cart> cartList = cartCriteria.list();
 
+                // If there's a session cart, merge it into the DB cart
+                if (httpSession.getAttribute("sessionCart") != null) {
+                    ArrayList<CartDTO> sessionCartList = (ArrayList<CartDTO>) httpSession.getAttribute("sessionCart");
+
+                    for (CartDTO sessionCartItem : sessionCartList) {
+                        boolean productExistsInDBCart = false;
+
+                        for (Cart dbCartItem : cartList) {
+                            if (dbCartItem.getProduct().getId() == (sessionCartItem.getProduct().getId())) {
+                                dbCartItem.setQty(dbCartItem.getQty() + sessionCartItem.getQty());
+                                productExistsInDBCart = true;
+                                session.update(dbCartItem); 
+                                break;
+                            }
+                        }
+
+                        if (!productExistsInDBCart) {
+                            Cart newCartItem = new Cart();
+                            newCartItem.setUser(user);
+                            newCartItem.setProduct(sessionCartItem.getProduct());
+                            newCartItem.setQty(sessionCartItem.getQty());
+                            session.save(newCartItem);
+                            cartList.add(newCartItem); 
+                        }
+                    }
+
+                    httpSession.removeAttribute("sessionCart");
+                }
+
                 for (Cart cart : cartList) {
                     CartDTO cartDTO = new CartDTO();
                     Product product = cart.getProduct();

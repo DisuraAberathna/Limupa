@@ -58,6 +58,15 @@ const loadData = async() => {
                                         );
                                 e.preventDefault();
                             });
+                    document.getElementById("add-to-watchlist-btn")
+                            .addEventListener(
+                                    "click",
+                                    (e) => {
+                                addToWatchlist(
+                                        data.product.id,
+                                        );
+                                e.preventDefault();
+                            });
 
                     document.getElementById("descriptions").innerHTML = data.product.description;
 
@@ -88,6 +97,13 @@ const loadData = async() => {
                                         "click",
                                         (e) => {
                                     addToCart(item.id, 1);
+                                    e.preventDefault();
+                                });
+                        productCloneHtml.querySelector("#similer-product-add-to-watchlist")
+                                .addEventListener(
+                                        "click",
+                                        (e) => {
+                                    addToWatchlist(item.id);
                                     e.preventDefault();
                                 });
 

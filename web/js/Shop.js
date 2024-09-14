@@ -109,7 +109,7 @@ const updateProductView = (data) => {
                 .addEventListener(
                         "click",
                         (e) => {
-                    addToWatchlist()(product.id);
+                    addToWatchlist(product.id);
                     e.preventDefault();
                 });
         document.getElementById("product-main").appendChild(productCloneHtml);
