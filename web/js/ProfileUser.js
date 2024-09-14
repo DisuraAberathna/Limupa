@@ -316,6 +316,8 @@ const addProduct = async() => {
                 document.getElementById("image-2-view").src = "images/addImage.png";
                 image_3.value = null;
                 document.getElementById("image-3-view").src = "images/addImage.png";
+                updateBrands();
+                updateModels();
             } else {
                 Swal.fire({
                     title: "Warning",

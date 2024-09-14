@@ -112,51 +112,53 @@ const updateProductView = (data) => {
     paginationHtml.innerHTML = "";
 
     const productCount = data.allProductCount;
-    const ProductPerPage = 3;
+    const ProductPerPage = 9;
 
     const pages = Math.ceil(productCount / ProductPerPage);
 
-    if (currentPage != 0) {
+    if (currentPage !== 0) {
         const paginattionCloneItemPrev = paginationItem.cloneNode(true);
         paginattionCloneItemPrev.querySelector("#pagination-item-text").innerHTML = `<i class="fa fa-chevron-left"></i> Previous`;
         paginattionCloneItemPrev.querySelector("#pagination-item-text").classList.add("Previous");
         paginattionCloneItemPrev.querySelector("#pagination-item-text").addEventListener(
-                "click", e => {
-                    currentPage--;
-                    searchProduct(currentPage * 9);
-
-                });
+                "click", (e) => {
+            currentPage--;
+            searchProduct(currentPage * 9);
+            e.preventDefault();
+        });
         paginationHtml.appendChild(paginattionCloneItemPrev);
     }
 
-    for (var i = 0; i < pages; i++) {
+    for (let i = 0; i < pages; i++) {
         let paginattionCloneItem = paginationItem.cloneNode(true);
         paginattionCloneItem.querySelector("#pagination-item-text").innerHTML = i + 1;
 
-        paginattionCloneItem.querySelector("#pagination-item-text").addEventListener(
-                "click", e => {
-                    currentPage = i;
-                    searchProduct(i * 9);
+        ((i) => {
+            paginattionCloneItem.querySelector("#pagination-item-text").addEventListener(
+                    "click", (e) => {
+                currentPage = i;
+                searchProduct(i * ProductPerPage);
+                e.preventDefault();
+            });
+        })(i);
 
-                });
-
-        if (i == currentPage) {
+        if (i === currentPage) {
             paginattionCloneItem.className = "active";
         }
 
         paginationHtml.appendChild(paginattionCloneItem);
     }
 
-    if (currentPage != (pages - 1)) {
+    if (currentPage !== (pages - 1)) {
         const paginattionCloneItemNext = paginationItem.cloneNode(true);
         paginattionCloneItemNext.querySelector("#pagination-item-text").innerHTML = `Next <i class="fa fa-chevron-right"></i>`;
         paginattionCloneItemNext.querySelector("#pagination-item-text").classList.add("Next");
         paginattionCloneItemNext.querySelector("#pagination-item-text").addEventListener(
-                "click", e => {
-                    currentPage++;
-                    searchProduct(currentPage * 9);
-
-                });
+                "click", (e) => {
+            currentPage++;
+            searchProduct(currentPage * 9);
+            e.preventDefault();
+        });
         paginationHtml.appendChild(paginattionCloneItemNext);
     }
 };
@@ -224,6 +226,8 @@ const clearSearch = () => {
     document.getElementById("brand-select").value = 0;
     document.getElementById("color-select").value = 0;
     document.getElementById("sort-select").value = 0;
+
+    updateBrands();
 
     const radioButtons = document.querySelectorAll('input[type="radio"]');
 
