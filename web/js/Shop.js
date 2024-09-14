@@ -227,6 +227,8 @@ const clearSearch = () => {
     document.getElementById("color-select").value = 0;
     document.getElementById("sort-select").value = 0;
 
+    updateBrands();
+
     const radioButtons = document.querySelectorAll('input[type="radio"]');
 
     for (let i = 0; i < radioButtons.length; i++) {
