@@ -49,12 +49,16 @@ public class LoadCheckout extends HttpServlet {
             cartCriteria.add(Restrictions.eq("user", user));
             List<Cart> cartList = cartCriteria.list();
 
-            for (Cart cart : cartList) {
-                cart.setUser(null);
-                cart.getProduct().setUser(null);
+            if (!cartList.isEmpty()) {
+                for (Cart cart : cartList) {
+                    cart.setUser(null);
+                    cart.getProduct().setUser(null);
+                }
+                jsonObject.add("cartList", gson.toJsonTree(cartList));
+                jsonObject.addProperty("ok", true);
+            } else {
+                jsonObject.addProperty("msg", "empty");
             }
-            jsonObject.add("cartList", gson.toJsonTree(cartList));
-            jsonObject.addProperty("ok", true);
 
             session.close();
         } else {
