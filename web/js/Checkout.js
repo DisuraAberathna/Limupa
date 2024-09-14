@@ -1,8 +1,10 @@
 const loadAddress = async() => {
     try {
         const response = await fetch("LoadAddress");
+
         if (response.ok) {
             const data = await response.json();
+
             let addressHtml = document.getElementById("address-view");
             document.getElementById("address-view-main").innerHTML = "";
             data.addressList.forEach(address => {
@@ -30,8 +32,10 @@ const loadAddress = async() => {
 const loadData = async() => {
     try {
         const response = await fetch("LoadCheckout");
+
         if (response.ok) {
             const data = await response.json();
+
             if (data.ok) {
                 let total = 0;
                 let totalShipping = 0;
@@ -78,11 +82,15 @@ const loadData = async() => {
 
                         ).format((total + totalShipping));
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                if (data.msg === "empty") {
+                    window.location.href = "index.html";
+                } else {
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
+                }
             }
         } else {
             console.error("Network error:", response.statusText);
@@ -147,7 +155,6 @@ const addAddress = async() => {
 };
 
 payhere.onCompleted = function onCompleted(orderId) {
-    console.log(orderId);
     sendMail(orderId);
 };
 
@@ -167,6 +174,8 @@ payhere.onError = function onError(error) {
     });
 };
 
+var x = 0;
+
 const checkout = async() => {
     try {
         const response = await fetch(
@@ -184,11 +193,16 @@ const checkout = async() => {
             if (data.ok) {
                 payhere.startPayment(data.payhereJson);
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                if (data.msg === "Order not found!" && x < 10) {
+                    payhere.startPayment(data.payhereJson);
+                } else {
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
+                    x++;
+                }
             }
         } else {
             console.error("Network error:", response.statusText);
@@ -216,11 +230,11 @@ const sendMail = async(id) => {
                     window.location.href = "index.html";
                 }, 3000);
             } else {
-                    Swal.fire({
-                        title: "Warning",
-                        text: data.msg,
-                        icon: "warning"
-                    });
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
             }
         } else {
             console.error("Network error:", response.statusText);
