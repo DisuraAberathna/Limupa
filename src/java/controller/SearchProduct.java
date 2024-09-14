@@ -37,56 +37,49 @@ public class SearchProduct extends HttpServlet {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ok", false);
 
-        // Open a Hibernate session
         Session session = HibernateUtil.getSessionFactory().openSession();
         JsonObject requestJsonObject = gson.fromJson(req.getReader(), JsonObject.class);
 
-        // Create a Criteria for the Product entity
         Criteria criteria = session.createCriteria(Product.class);
-        criteria.add(Restrictions.eq("status", 1)); // Active products only
+        criteria.add(Restrictions.eq("status", 1));
 
         // Category filter
         if (requestJsonObject.has("category") && !requestJsonObject.get("category").getAsString().equals("0")) {
             int categoryId = requestJsonObject.get("category").getAsInt();
 
-            // Fetch category entity
             Criteria categoryCriteria = session.createCriteria(Category.class);
             categoryCriteria.add(Restrictions.eq("id", categoryId));
             Category category = (Category) categoryCriteria.uniqueResult();
 
             if (category != null) {
-                // Brand filter
                 if (requestJsonObject.has("brand") && !requestJsonObject.get("brand").getAsString().equals("0")) {
                     int brandId = requestJsonObject.get("brand").getAsInt();
 
-                    // Fetch models for the specified brand and category
                     Criteria modelCriteria = session.createCriteria(Model.class, "model")
-                            .createAlias("model.brand", "brand") // Join Model with Brand
-                            .createAlias("brand.category", "category") // Join Brand with Category
-                            .add(Restrictions.eq("brand.id", brandId)) // Filter by brand ID
-                            .add(Restrictions.eq("category.id", categoryId));  // Filter by category ID
+                            .createAlias("model.brand", "brand") 
+                            .createAlias("brand.category", "category") 
+                            .add(Restrictions.eq("brand.id", brandId)) 
+                            .add(Restrictions.eq("category.id", categoryId));  
 
                     List<Model> brandModelList = modelCriteria.list();
                     if (!brandModelList.isEmpty()) {
-                        criteria.add(Restrictions.in("model", brandModelList));  // Filter products by these models
+                        criteria.add(Restrictions.in("model", brandModelList));  
                     }
 
                 } else {
-                    // No brand specified, filter by models within the category only
                     Criteria modelCriteria = session.createCriteria(Model.class, "model")
                             .createAlias("model.brand", "brand")
                             .createAlias("brand.category", "category")
-                            .add(Restrictions.eq("category.id", categoryId));  // Filter by category ID
+                            .add(Restrictions.eq("category.id", categoryId));  
 
                     List<Model> modelList = modelCriteria.list();
                     if (!modelList.isEmpty()) {
-                        criteria.add(Restrictions.in("model", modelList));  // Filter products by these models
+                        criteria.add(Restrictions.in("model", modelList));  
                     }
                 }
             }
         }
 
-        // Condition filter
         if (requestJsonObject.has("condition")) {
             String conditionName = requestJsonObject.get("condition").getAsString();
             Criteria conditionCriteria = session.createCriteria(ProductCondition.class);
@@ -98,7 +91,6 @@ public class SearchProduct extends HttpServlet {
             }
         }
 
-        // Color filter
         if (requestJsonObject.has("color") && !requestJsonObject.get("color").getAsString().equals("0")) {
             int colorId = requestJsonObject.get("color").getAsInt();
             Criteria colorCriteria = session.createCriteria(Color.class);
@@ -110,7 +102,6 @@ public class SearchProduct extends HttpServlet {
             }
         }
 
-        // Price range filter
         if (requestJsonObject.has("priceStart") && requestJsonObject.has("priceEnd")) {
             Double priceStart = requestJsonObject.get("priceStart").getAsDouble();
             Double priceEnd = requestJsonObject.get("priceEnd").getAsDouble();
@@ -119,7 +110,6 @@ public class SearchProduct extends HttpServlet {
             criteria.add(Restrictions.le("price", priceEnd));
         }
 
-        // Sorting logic
         if (requestJsonObject.has("sort")) {
             String sort = requestJsonObject.get("sort").getAsString();
             switch (sort) {
@@ -144,32 +134,25 @@ public class SearchProduct extends HttpServlet {
             }
         }
 
-        // Add product count to response
         jsonObject.addProperty("allProductCount", criteria.list().size());
 
-        // Pagination
         if (requestJsonObject.has("firstResult")) {
             int firstResult = requestJsonObject.get("firstResult").getAsInt();
             criteria.setFirstResult(firstResult);
             criteria.setMaxResults(9);
         }
 
-        // Execute the query and fetch the results
         List<Product> productList = criteria.list();
 
-        // Remove any sensitive or unnecessary references (e.g., user data)
         for (Product product : productList) {
             product.setUser(null);
         }
 
-        // Close the session
         session.close();
 
-        // Prepare the response
         jsonObject.addProperty("ok", true);
         jsonObject.add("productList", gson.toJsonTree(productList));
 
-        // Set response type and send the JSON response
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(jsonObject));
     }
