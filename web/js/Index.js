@@ -43,6 +43,13 @@ const loadProduct = async() => {
                                 addToCart(product.id, 1);
                                 e.preventDefault();
                             });
+                    productCloneHtml.querySelector("#product-add-to-watchlist")
+                            .addEventListener(
+                                    "click",
+                                    (e) => {
+                                addToWatchlist(product.id);
+                                e.preventDefault();
+                            });
 
                     categoryCloneHtml.querySelector("#product-main").appendChild(productCloneHtml);
                 });

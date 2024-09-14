@@ -73,3 +73,33 @@ const addToCart = async(id, qty) => {
         console.error("Fetch failed:", e);
     }
 };
+
+const addToWatchlist = async(id) => {
+    try {
+        const response = await fetch(
+                "AddToWatchlist?id=" + id
+                );
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Product added to the watchlist!",
+                    icon: "success"
+                });
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
