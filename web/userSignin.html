@@ -73,7 +73,7 @@
                         Settings
                       </div>
                       <div class="setting ht-setting">
-                        <ul class="ht-setting-list">
+                        <ul class="ht-setting-list" id="signedinView">
                           <li>
                             <a href="userProfile.html">
                               <img src="images/user.png" alt="" />
@@ -81,21 +81,47 @@
                             </a>
                           </li>
                           <li>
-                            <a href="checkout.html">
+                            <a href="cart.html">
                               <img src="images/cart.png" alt="" />
-                              Checkout
+                              Cart
                             </a>
                           </li>
                           <li>
-                            <a href="userSignin.html">
-                              <img src="images/signin.png" alt="" />
-                              Sign In
+                            <a href="watchlist.html">
+                              <img src="images/heart.png" alt="" />
+                              Watchlist
                             </a>
                           </li>
                           <li>
                             <a href="#" onclick="signout();">
                               <img src="images/signout.png" alt="" />
                               Sign Out
+                            </a>
+                          </li>
+                        </ul>
+                        <ul class="ht-setting-list" id="notSignedinView">
+                          <li>
+                            <a href="cart.html">
+                              <img src="images/cart.png" alt="" />
+                              Cart
+                            </a>
+                          </li>
+                          <li>
+                            <a href="watchlist.html">
+                              <img src="images/heart.png" alt="" />
+                              Watchlist
+                            </a>
+                          </li>
+                          <li>
+                            <a href="userRegister.html">
+                              <img src="images/register.png" alt="" />
+                              Register
+                            </a>
+                          </li>
+                          <li>
+                            <a href="userSignin.html">
+                              <img src="images/signin.png" alt="" />
+                              Sign In
                             </a>
                           </li>
                         </ul>
@@ -132,9 +158,7 @@
                     <!-- Begin Header Middle Wishlist Area -->
                     <li class="hm-wishlist">
                       <a href="watchlist.html">
-                        <span class="cart-item-count wishlist-item-count"
-                          >0</span
-                        >
+                        
                         <i class="fa fa-heart-o"></i>
                       </a>
                     </li>
@@ -142,9 +166,7 @@
                     <!-- Begin Header Mini Cart Area -->
                     <li class="hm-cart">
                       <a href="cart.html">
-                        <span class="cart-item-count wishlist-item-count"
-                          >0</span
-                        >
+                        
                         <i class="fa fa-cart-plus"></i>
                       </a>
                     </li>
@@ -614,6 +636,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="js/Script.js"></script>
     <script src="js/SigninUser.js"></script>
   </body>
 
