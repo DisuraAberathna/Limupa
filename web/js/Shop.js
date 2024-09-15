@@ -15,7 +15,7 @@ const loadData = async() => {
             loadSelectOptions("color-select", colorList, ["id", "name"]);
             loadConditions(data.conditionList);
 
-            updateProductView(data)
+            updateProductView(data);
 
         } else {
             console.error("Network error:", response.statusText);

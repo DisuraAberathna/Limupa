@@ -48,7 +48,6 @@ public class SendMail extends HttpServlet {
                 Criteria orderCriteria = session.createCriteria(Orders.class);
                 orderCriteria.add(Restrictions.eq("id", orderId));
 
-                System.out.println(orderCriteria.list());
                 if (!orderCriteria.list().isEmpty()) {
                     Orders order = (Orders) orderCriteria.list().get(0);
 
@@ -91,11 +90,19 @@ public class SendMail extends HttpServlet {
                             + "      }\n"
                             + "      .invoice-details th {\n"
                             + "        background-color: #f8f8f8;\n"
-                            + "        text-align: left;\n"
+                            + "      }\n"
+                            + "      .text-start {\n"
+                            + "         text-align: start;\n"
+                            + "      }\n"
+                            + "      .text-end {\n"
+                            + "         text-align: end;\n"
+                            + "      }\n"
+                            + "      .text-center {\n"
+                            + "         text-align: center;\n"
                             + "      }\n"
                             + "      .total {\n"
                             + "        font-weight: bold;\n"
-                            + "        text-align: right;\n"
+                            + "        text-align: start;\n"
                             + "      }\n"
                             + "      .footer {\n"
                             + "        margin-top: 20px;\n"
@@ -113,10 +120,10 @@ public class SendMail extends HttpServlet {
                             + "\n"
                             + "      <table class=\"invoice-details\">\n"
                             + "        <tr>\n"
-                            + "          <th>Item</th>\n"
-                            + "          <th>Quantity</th>\n"
-                            + "          <th>Price</th>\n"
-                            + "          <th>Total</th>\n"
+                            + "          <th class=\"text-start\">Item</th>\n"
+                            + "          <th class=\"text-center\">Quantity</th>\n"
+                            + "          <th class=\"text-center\">Price</th>\n"
+                            + "          <th class=\"text-center\">Total</th>\n"
                             + "        </tr>";
 
                     String mailContentMiddle = "";
@@ -134,23 +141,23 @@ public class SendMail extends HttpServlet {
 
                         mailContentMiddle += "<tr>\n"
                                 + "          <td>" + orderItem.getProduct().getTitle() + "</td>\n"
-                                + "          <td>" + qty + "</td>\n"
-                                + "          <td>LKR " + decimalFormat.format(price) + "</td>\n"
-                                + "          <td>LKR " + decimalFormat.format(price * qty) + "</td>\n"
+                                + "          <td class=\"text-center\">" + qty + "</td>\n"
+                                + "          <td class=\"text-end\">LKR " + decimalFormat.format(price) + "</td>\n"
+                                + "          <td class=\"text-end\">LKR " + decimalFormat.format(price * qty) + "</td>\n"
                                 + "        </tr>";
                     }
 
                     String mailContentEnd = "<tr>\n"
                             + "          <td colspan=\"3\" class=\"total\">Subtotal:</td>\n"
-                            + "          <td>LKR " + decimalFormat.format(total) + "</td>\n"
+                            + "          <td class=\"text-end\">LKR " + decimalFormat.format(total) + "</td>\n"
                             + "        </tr>\n"
                             + "        <tr>\n"
                             + "          <td colspan=\"3\" class=\"total\">Shipping Fee:</td>\n"
-                            + "          <td>LKR " + decimalFormat.format(shipping) + "</td>\n"
+                            + "          <td class=\"text-end\">LKR " + decimalFormat.format(shipping) + "</td>\n"
                             + "        </tr>\n"
                             + "        <tr>\n"
                             + "          <td colspan=\"3\" class=\"total\">Total:</td>\n"
-                            + "          <td>LKR " + decimalFormat.format(total + shipping) + "</td>\n"
+                            + "          <td class=\"text-end\">LKR " + decimalFormat.format(total + shipping) + "</td>\n"
                             + "        </tr>\n"
                             + "      </table>\n"
                             + "\n"

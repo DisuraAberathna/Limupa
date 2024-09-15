@@ -55,26 +55,26 @@ public class SearchProduct extends HttpServlet {
                 if (requestJsonObject.has("brand") && !requestJsonObject.get("brand").getAsString().equals("0")) {
                     int brandId = requestJsonObject.get("brand").getAsInt();
 
-                    Criteria modelCriteria = session.createCriteria(Model.class, "model")
-                            .createAlias("model.brand", "brand") 
-                            .createAlias("brand.category", "category") 
-                            .add(Restrictions.eq("brand.id", brandId)) 
-                            .add(Restrictions.eq("category.id", categoryId));  
+                    Criteria modelCriteria = session.createCriteria(Model.class, "model");
+                    modelCriteria.createAlias("model.brand", "brand");
+                    modelCriteria.createAlias("brand.category", "category");
+                    modelCriteria.add(Restrictions.eq("brand.id", brandId));
+                    modelCriteria.add(Restrictions.eq("category.id", categoryId));
 
                     List<Model> brandModelList = modelCriteria.list();
                     if (!brandModelList.isEmpty()) {
-                        criteria.add(Restrictions.in("model", brandModelList));  
+                        criteria.add(Restrictions.in("model", brandModelList));
                     }
 
                 } else {
-                    Criteria modelCriteria = session.createCriteria(Model.class, "model")
-                            .createAlias("model.brand", "brand")
-                            .createAlias("brand.category", "category")
-                            .add(Restrictions.eq("category.id", categoryId));  
+                    Criteria modelCriteria = session.createCriteria(Model.class, "model");
+                    modelCriteria.createAlias("model.brand", "brand");
+                    modelCriteria.createAlias("brand.category", "category");
+                    modelCriteria.add(Restrictions.eq("category.id", categoryId));
 
                     List<Model> modelList = modelCriteria.list();
                     if (!modelList.isEmpty()) {
-                        criteria.add(Restrictions.in("model", modelList));  
+                        criteria.add(Restrictions.in("model", modelList));
                     }
                 }
             }
@@ -150,8 +150,8 @@ public class SearchProduct extends HttpServlet {
 
         session.close();
 
-        jsonObject.addProperty("ok", true);
         jsonObject.add("productList", gson.toJsonTree(productList));
+        jsonObject.addProperty("ok", true);
 
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(jsonObject));

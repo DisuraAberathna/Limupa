@@ -16,14 +16,14 @@ const loadData = async() => {
             const colorList = data.colorList;
             const conditionList = data.conditionList;
 
-            console.log(data.productList);
-
             loadSelectOptions("category-select", categoryList, ["id", "name", "status"]);
             loadSelectOptions("brand-select", brandList, ["id", "name", "status"]);
             loadSelectOptions("model-select", modelList, ["id", "name", "status"]);
             loadSelectOptions("color-select", colorList, ["id", "name"]);
             loadSelectOptions("condition-select", conditionList, ["id", "name"]);
             loadAddress();
+            updateMyProductView(data);
+            updateBuyProductView(data);
         } else {
             console.error("Network error:", response.statusText);
         }
@@ -373,6 +373,283 @@ const addAddress = async() => {
                 postal_code.value = "";
                 mobile.value = "";
                 loadAddress();
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+const loadMyProducts = async(firstResult) => {
+    const sort = document.getElementById("my-products-sort-select").value;
+
+    const reqObject = {
+        firstResult: firstResult,
+        sort: sort
+    };
+
+    try {
+        const response = await fetch(
+                "LoadMyProducts",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reqObject)
+                });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                updateMyProductView(data);
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: "Something went wrong! Please try again later.",
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+var myProductHtml = document.getElementById("my-products-table-row");
+var myProductCurrentPage = 0;
+var myProductPaginationItem = document.getElementById("my-products-pagination-item");
+
+const updateMyProductView = (data) => {
+    document.getElementById("my-products-table-body").innerHTML = "";
+    let row = 0;
+    data.productList.forEach(product => {
+        let productCloneHtml = myProductHtml.cloneNode(true);
+        row++;
+        productCloneHtml.querySelector("#my-products-id").innerHTML = row;
+        productCloneHtml.querySelector("#my-products-image").src = "images/product/" + product.id + "/" + product.id + "image1.png";
+        productCloneHtml.querySelector("#my-products-title").innerHTML = product.title + " - " + product.color.name;
+        productCloneHtml.querySelector("#my-products-price").innerHTML = "LKR " +
+                new Intl.NumberFormat(
+                        "en-US",
+                        {
+                            minimumFractionDigits: 2
+                        }
+                ).format(product.price);
+        productCloneHtml.querySelector("#my-products-qty").innerHTML = product.qty > 0 ? product.qty + ' Items Left' : 'Out of Stock';
+        productCloneHtml.querySelector("#my-products-qty").style.color = product.qty < 1 && 'Red';
+        productCloneHtml.querySelector("#my-products-status").innerHTML = product.status === 1 ? 'Active' : 'Inactive';
+        document.getElementById("my-products-table-body").appendChild(productCloneHtml);
+    });
+
+    const paginationHtml = document.getElementById("my-products-pagination");
+    paginationHtml.innerHTML = "";
+
+    const productCount = data.allProductCount;
+    const ProductPerPage = 10;
+
+    const pages = Math.ceil(productCount / ProductPerPage);
+
+    if (myProductCurrentPage !== 0) {
+        const paginattionCloneItemPrev = myProductPaginationItem.cloneNode(true);
+        paginattionCloneItemPrev.querySelector("#my-products-pagination-item-text").innerHTML = `<i class="fa fa-chevron-left"></i> Previous`;
+        paginattionCloneItemPrev.querySelector("#my-products-pagination-item-text").classList.add("Previous");
+        paginattionCloneItemPrev.querySelector("#my-products-pagination-item-text").addEventListener(
+                "click", (e) => {
+            myProductCurrentPage--;
+            loadMyProducts(myProductCurrentPage * 10);
+            e.preventDefault();
+        });
+        paginationHtml.appendChild(paginattionCloneItemPrev);
+    }
+
+    for (let i = 0; i < pages; i++) {
+        let paginattionCloneItem = myProductPaginationItem.cloneNode(true);
+        paginattionCloneItem.querySelector("#my-products-pagination-item-text").innerHTML = i + 1;
+
+        ((i) => {
+            paginattionCloneItem.querySelector("#my-products-pagination-item-text").addEventListener(
+                    "click", (e) => {
+                myProductCurrentPage = i;
+                loadMyProducts(i * ProductPerPage);
+                e.preventDefault();
+            });
+        })(i);
+
+        if (i === myProductCurrentPage) {
+            paginattionCloneItem.className = "active";
+        }
+
+        paginationHtml.appendChild(paginattionCloneItem);
+    }
+
+    if (myProductCurrentPage !== (pages - 1)) {
+        const paginattionCloneItemNext = myProductPaginationItem.cloneNode(true);
+        paginattionCloneItemNext.querySelector("#my-products-pagination-item-text").innerHTML = `Next <i class="fa fa-chevron-right"></i>`;
+        paginattionCloneItemNext.querySelector("#my-products-pagination-item-text").classList.add("Next");
+        paginattionCloneItemNext.querySelector("#my-products-pagination-item-text").addEventListener(
+                "click", (e) => {
+            myProductCurrentPage++;
+            loadMyProducts(myProductCurrentPage * 10);
+            e.preventDefault();
+        });
+        paginationHtml.appendChild(paginattionCloneItemNext);
+    }
+};
+
+const loadBuyProducts = async(firstResult) => {
+    const sort = document.getElementById("buy-products-sort-select").value;
+
+    const reqObject = {
+        firstResult: firstResult,
+        sort: sort
+    };
+
+    try {
+        const response = await fetch(
+                "LoadBuyProducts",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reqObject)
+                });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                updateBuyProductView(data);
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: "Something went wrong! Please try again later.",
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+var buyProductHtml = document.getElementById("buy-products-table-row");
+var buyProductCurrentPage = 0;
+var buyProductPaginationItem = document.getElementById("buy-products-pagination-item");
+
+const updateBuyProductView = (data) => {
+    document.getElementById("buy-products-table-body").innerHTML = "";
+    let row = 0;
+    data.orderList.forEach(order => {
+        let productCloneHtml = buyProductHtml.cloneNode(true);
+        row++;
+        productCloneHtml.querySelector("#buy-products-id").innerHTML = row;
+        productCloneHtml.querySelector("#buy-products-image").src = "images/product/" + order.product.id + "/" + order.product.id + "image1.png";
+        productCloneHtml.querySelector("#buy-products-title").innerHTML = order.product.title + " - " + order.product.color.name;
+        productCloneHtml.querySelector("#buy-products-date").innerHTML = order.order.date_time;
+        productCloneHtml.querySelector("#buy-products-order-id").innerHTML = "Order Id : " + order.order.id;
+        productCloneHtml.querySelector("#buy-products-price").innerHTML = "LKR " +
+                new Intl.NumberFormat(
+                        "en-US",
+                        {
+                            minimumFractionDigits: 2
+                        }
+                ).format(order.product.price);
+        productCloneHtml.querySelector("#buy-products-qty").innerHTML = order.qty + " Items";
+        productCloneHtml.querySelector("#buy-products-status").innerHTML = order.orderStatus.name;
+        productCloneHtml.querySelector("#buy-products-send-mail")
+                .addEventListener(
+                        "click",
+                        (e) => {
+                    sendMail(order.order.id);
+                    e.preventDefault();
+                });
+        document.getElementById("buy-products-table-body").appendChild(productCloneHtml);
+    });
+
+    const paginationHtml = document.getElementById("buy-products-pagination");
+    paginationHtml.innerHTML = "";
+
+    const productCount = data.allOrderCount;
+    const ProductPerPage = 10;
+
+    const pages = Math.ceil(productCount / ProductPerPage);
+
+    if (buyProductCurrentPage !== 0) {
+        const paginattionCloneItemPrev = buyProductPaginationItem.cloneNode(true);
+        paginattionCloneItemPrev.querySelector("#buy-products-pagination-item-text").innerHTML = `<i class="fa fa-chevron-left"></i> Previous`;
+        paginattionCloneItemPrev.querySelector("#buy-products-pagination-item-text").classList.add("Previous");
+        paginattionCloneItemPrev.querySelector("#buy-products-pagination-item-text").addEventListener(
+                "click", (e) => {
+            buyProductCurrentPage--;
+            loadBuyProducts(buyProductCurrentPage * 10);
+            e.preventDefault();
+        });
+        paginationHtml.appendChild(paginattionCloneItemPrev);
+    }
+
+    for (let i = 0; i < pages; i++) {
+        let paginattionCloneItem = buyProductPaginationItem.cloneNode(true);
+        paginattionCloneItem.querySelector("#buy-products-pagination-item-text").innerHTML = i + 1;
+
+        ((i) => {
+            paginattionCloneItem.querySelector("#buy-products-pagination-item-text").addEventListener(
+                    "click", (e) => {
+                buyProductCurrentPage = i;
+                loadBuyProducts(i * ProductPerPage);
+                e.preventDefault();
+            });
+        })(i);
+
+        if (i === buyProductCurrentPage) {
+            paginattionCloneItem.className = "active";
+        }
+
+        paginationHtml.appendChild(paginattionCloneItem);
+    }
+
+    if (buyProductCurrentPage !== (pages - 1)) {
+        const paginattionCloneItemNext = buyProductPaginationItem.cloneNode(true);
+        paginattionCloneItemNext.querySelector("#buy-products-pagination-item-text").innerHTML = `Next <i class="fa fa-chevron-right"></i>`;
+        paginattionCloneItemNext.querySelector("#buy-products-pagination-item-text").classList.add("Next");
+        paginattionCloneItemNext.querySelector("#buy-products-pagination-item-text").addEventListener(
+                "click", (e) => {
+            buyProductCurrentPage++;
+            loadBuyProducts(buyProductCurrentPage * 10);
+            e.preventDefault();
+        });
+        paginationHtml.appendChild(paginattionCloneItemNext);
+    }
+};
+
+const sendMail = async(id) => {
+    console.log("sendMail: " + id);
+    try {
+        const response = await fetch("SendMail?id=" + id);
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Payment completed! Your invoice send to your email.",
+                    icon: "success"
+                });
             } else {
                 Swal.fire({
                     title: "Warning",

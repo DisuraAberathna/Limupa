@@ -52,7 +52,6 @@ public class LoadCart extends HttpServlet {
 
                 List<Cart> cartList = cartCriteria.list();
 
-                // If there's a session cart, merge it into the DB cart
                 if (httpSession.getAttribute("sessionCart") != null) {
                     ArrayList<CartDTO> sessionCartList = (ArrayList<CartDTO>) httpSession.getAttribute("sessionCart");
 
