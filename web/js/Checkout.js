@@ -216,8 +216,6 @@ payhere.onError = function onError(error) {
     });
 };
 
-var x = 0;
-
 const checkout = async() => {
     try {
         const response = await fetch(
@@ -235,16 +233,11 @@ const checkout = async() => {
             if (data.ok) {
                 payhere.startPayment(data.payhereJson);
             } else {
-                if (data.msg === "Order not found!" && x < 10) {
-                    payhere.startPayment(data.payhereJson);
-                } else {
-                    Swal.fire({
-                        title: "Warning",
-                        text: data.msg,
-                        icon: "warning"
-                    });
-                    x++;
-                }
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
             }
         } else {
             console.error("Network error:", response.statusText);
