@@ -162,6 +162,8 @@ const addAddress = async() => {
     }
 };
 
+var y = 0;
+
 const updateAddress = async(id) => {
     try {
         const response = await fetch("UpdateAddress?id=" + id);
@@ -174,7 +176,11 @@ const updateAddress = async(id) => {
                     text: "Shipping address updated!",
                     icon: "success"
                 });
-                loadAddress();
+                if (y < 10) {
+                    loadAddress();
+                } else {
+                    y++;
+                }
             } else {
                 Swal.fire({
                     title: "Warning",
@@ -249,7 +255,6 @@ const checkout = async() => {
 };
 
 const sendMail = async(id) => {
-    console.log("sendMail: " + id);
     try {
         const response = await fetch("SendMail?id=" + id);
 
@@ -266,11 +271,19 @@ const sendMail = async(id) => {
                     window.location.href = "index.html";
                 }, 3000);
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                if (data.msg === "Order not found!") {
+                    Swal.fire({
+                        title: "Warning",
+                        text: "Something went wrong! Mail didn't sent, You can view invoice through your profile.",
+                        icon: "warning"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
+                }
             }
         } else {
             console.error("Network error:", response.statusText);
