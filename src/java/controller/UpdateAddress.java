@@ -38,7 +38,7 @@ public class UpdateAddress extends HttpServlet {
         String id = req.getParameter("id");
 
         if (!Validate.isInteger(id)) {
-            responseDTO.setMsg("Product not found! Please try again later.");
+            responseDTO.setMsg("Address not found! Please try again later.");
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
 
