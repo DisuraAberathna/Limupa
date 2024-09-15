@@ -6812,10 +6812,30 @@ span.required {
 
 .brand-item {
     transition-duration: 500ms;
-    font-weight: 450;
+    font-weight: 500;
 }
 
 .brand-item:hover {
     color: #000;
     transition-duration: 500ms;
+}
+
+.product-sort {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-sort select {
+    border-radius: 0;
+    color: #242424;
+    font-size: 14px;
+    width: 320px;
+    z-index: 999;
+}
+
+@media only screen and (max-width: 767px) {
+    .product-sort select {
+        width: 180px;
+    }
 }
