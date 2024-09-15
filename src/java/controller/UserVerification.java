@@ -60,6 +60,7 @@ public class UserVerification extends HttpServlet {
                         userDTO.setF_name(user.getF_name());
                         userDTO.setL_name(user.getL_name());
                         userDTO.setEmail(email);
+                        userDTO.setPassword(null);
 
                         req.getSession().removeAttribute("id");
                         req.getSession().removeAttribute("email");
@@ -98,6 +99,7 @@ public class UserVerification extends HttpServlet {
                         userDTO.setF_name(user.getF_name());
                         userDTO.setL_name(user.getL_name());
                         userDTO.setEmail(user.getEmail());
+                        userDTO.setPassword(null);
 
                         req.getSession().removeAttribute("id");
                         req.getSession().removeAttribute("password");
@@ -133,6 +135,8 @@ public class UserVerification extends HttpServlet {
                     userDTO.setF_name(user.getF_name());
                     userDTO.setL_name(user.getL_name());
                     userDTO.setEmail(email);
+                    userDTO.setPassword(null);
+
                     req.getSession().removeAttribute("email");
                     req.getSession().setAttribute("user", userDTO);
 

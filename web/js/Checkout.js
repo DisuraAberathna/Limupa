@@ -10,6 +10,12 @@ const loadAddress = async() => {
             data.addressList.forEach(address => {
                 let addressCloneHtml = addressHtml.cloneNode(true);
                 addressCloneHtml.querySelector("#is-used").checked = address.status === 1 ? true : false;
+                addressCloneHtml.querySelector("#is-used").addEventListener(
+                        "click",
+                        (e) => {
+                    updateAddress(address.id);
+                    e.preventDefault();
+                });
                 addressCloneHtml.querySelector("#added-name").innerHTML = address.user.f_name + " " + address.user.l_name;
                 addressCloneHtml.querySelector("#added-address").innerHTML = address.line_1 + ", " + address.line_2 + ", " + address.city.name + " - " + address.postal_code;
                 addressCloneHtml.querySelector("#added-mobile").innerHTML = address.mobile;
@@ -29,6 +35,7 @@ const loadAddress = async() => {
         console.error("Fetch failed:", e);
     }
 };
+
 const loadData = async() => {
     try {
         const response = await fetch("LoadCheckout");
@@ -99,6 +106,7 @@ const loadData = async() => {
         console.error("Fetch failed:", e);
     }
 };
+
 const addAddress = async() => {
     const line_1 = document.getElementById("line_1");
     const line_2 = document.getElementById("line_2");
@@ -154,6 +162,40 @@ const addAddress = async() => {
     }
 };
 
+var y = 0;
+
+const updateAddress = async(id) => {
+    try {
+        const response = await fetch("UpdateAddress?id=" + id);
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Shipping address updated!",
+                    icon: "success"
+                });
+                if (y < 10) {
+                    loadAddress();
+                } else {
+                    y++;
+                }
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
 payhere.onCompleted = function onCompleted(orderId) {
     sendMail(orderId);
 };
@@ -174,8 +216,6 @@ payhere.onError = function onError(error) {
     });
 };
 
-var x = 0;
-
 const checkout = async() => {
     try {
         const response = await fetch(
@@ -193,16 +233,11 @@ const checkout = async() => {
             if (data.ok) {
                 payhere.startPayment(data.payhereJson);
             } else {
-                if (data.msg === "Order not found!" && x < 10) {
-                    payhere.startPayment(data.payhereJson);
-                } else {
-                    Swal.fire({
-                        title: "Warning",
-                        text: data.msg,
-                        icon: "warning"
-                    });
-                    x++;
-                }
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
             }
         } else {
             console.error("Network error:", response.statusText);
@@ -213,7 +248,6 @@ const checkout = async() => {
 };
 
 const sendMail = async(id) => {
-    console.log("sendMail: " + id);
     try {
         const response = await fetch("SendMail?id=" + id);
 
@@ -230,11 +264,19 @@ const sendMail = async(id) => {
                     window.location.href = "index.html";
                 }, 3000);
             } else {
-                Swal.fire({
-                    title: "Warning",
-                    text: data.msg,
-                    icon: "warning"
-                });
+                if (data.msg === "Order not found!") {
+                    Swal.fire({
+                        title: "Warning",
+                        text: "Something went wrong! Mail didn't sent, You can view invoice through your profile.",
+                        icon: "warning"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Warning",
+                        text: data.msg,
+                        icon: "warning"
+                    });
+                }
             }
         } else {
             console.error("Network error:", response.statusText);

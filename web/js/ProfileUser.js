@@ -58,6 +58,12 @@ const loadAddress = async() => {
             data.addressList.forEach(address => {
                 let addressCloneHtml = addressHtml.cloneNode(true);
                 addressCloneHtml.querySelector("#is-used").checked = address.status === 1 ? true : false;
+                addressCloneHtml.querySelector("#is-used").addEventListener(
+                        "click",
+                        (e) => {
+                    updateAddress(address.id);
+                    e.preventDefault();
+                });
                 addressCloneHtml.querySelector("#added-name").innerHTML = address.user.f_name + " " + address.user.l_name;
                 addressCloneHtml.querySelector("#added-address").innerHTML = address.line_1 + ", " + address.line_2 + ", " + address.city.name + " - " + address.postal_code;
                 addressCloneHtml.querySelector("#added-mobile").innerHTML = address.mobile;
@@ -70,6 +76,34 @@ const loadAddress = async() => {
                 optionTag.innerHTML = item.name;
                 selectTag.appendChild(optionTag);    
             });
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+const updateAddress = async(id) => {
+    try {
+        const response = await fetch("UpdateAddress?id=" + id);
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Shipping address updated!",
+                    icon: "success"
+                });
+                loadAddress();
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
         } else {
             console.error("Network error:", response.statusText);
         }
@@ -450,6 +484,13 @@ const updateMyProductView = (data) => {
         productCloneHtml.querySelector("#my-products-qty").innerHTML = product.qty > 0 ? product.qty + ' Items Left' : 'Out of Stock';
         productCloneHtml.querySelector("#my-products-qty").style.color = product.qty < 1 && 'Red';
         productCloneHtml.querySelector("#my-products-status").innerHTML = product.status === 1 ? 'Active' : 'Inactive';
+        productCloneHtml.querySelector("#my-products-delete").innerHTML = product.status === 1 ? 'Remove' : 'Restore';
+        productCloneHtml.querySelector("#my-products-delete").addEventListener(
+                "click",
+                (e) => {
+            updateProductStatus(product.id, product.status === 1 ? '0' : '1');
+            e.preventDefault();
+        });
         document.getElementById("my-products-table-body").appendChild(productCloneHtml);
     });
 
@@ -505,6 +546,35 @@ const updateMyProductView = (data) => {
             e.preventDefault();
         });
         paginationHtml.appendChild(paginattionCloneItemNext);
+    }
+};
+
+const updateProductStatus = async(id, status) => {
+    try {
+        const response = await fetch("UpdateProductStatus?id=" + id + "&status=" + status);
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                Swal.fire({
+                    title: "Information",
+                    text: "Product status updated",
+                    icon: "success"
+                });
+                loadMyProducts(0);
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
     }
 };
 
@@ -637,7 +707,6 @@ const updateBuyProductView = (data) => {
 };
 
 const sendMail = async(id) => {
-    console.log("sendMail: " + id);
     try {
         const response = await fetch("SendMail?id=" + id);
 
