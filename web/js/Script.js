@@ -24,20 +24,48 @@ const hasLetter = (event) => {
     return true;
 };
 
+const checkSignedIn = async() => {
+    try {
+        const response = await fetch("CheckSignedIn");
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.ok) {
+                document.getElementById("signedinView").style.display = "block";
+                document.getElementById("notSignedinView").style.display = "none";
+            } else {
+                document.getElementById("signedinView").style.display = "none";
+                document.getElementById("notSignedinView").style.display = "block";
+            }
+        } else {
+            console.error("Network error:", response.statusText);
+        }
+    } catch (e) {
+        console.error("Fetch failed:", e);
+    }
+};
+
+document.addEventListener("DOMContentLoaded", (checkSignedIn()));
+
 const signout = async () => {
     try {
         const response = await fetch("Signout");
 
-        const data = await response.json();
+        if (response.ok) {
+            const data = await response.json();
 
-        if (data.ok) {
-            window.location.reload();
+            if (data.ok) {
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    title: "Warning",
+                    text: data.msg,
+                    icon: "warning"
+                });
+            }
         } else {
-            Swal.fire({
-                title: "Warning",
-                text: data.msg,
-                icon: "warning"
-            });
+            console.error("Network error:", response.statusText);
         }
     } catch (e) {
         console.error("Fetch failed:", e);
