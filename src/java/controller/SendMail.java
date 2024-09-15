@@ -48,7 +48,6 @@ public class SendMail extends HttpServlet {
                 Criteria orderCriteria = session.createCriteria(Orders.class);
                 orderCriteria.add(Restrictions.eq("id", orderId));
 
-                System.out.println(orderCriteria.list());
                 if (!orderCriteria.list().isEmpty()) {
                     Orders order = (Orders) orderCriteria.list().get(0);
 
